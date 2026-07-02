@@ -4,9 +4,10 @@ import {
   CARBS_MAX,
   CARBS_MIN,
   formatDuration,
-  LEG_LABELS,
+  LEG_KEYS,
   TRI_LEG_BOUNDS,
 } from '../lib/fueling'
+import { useI18n } from '../lib/i18n'
 import { NumberField, Slider } from './Slider'
 
 const LEG_ICONS: Record<LegKey, React.ReactNode> = {
@@ -21,11 +22,13 @@ interface TriLegsControlProps {
 }
 
 export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
+  const { t } = useI18n()
   return (
     <div className="space-y-3">
-      {(Object.keys(LEG_LABELS) as LegKey[]).map((key) => {
+      {LEG_KEYS.map((key) => {
         const leg = legs[key]
         const bounds = TRI_LEG_BOUNDS[key]
+        const legLabel = t(`leg.${key}`)
         const h = Math.floor(leg.durationMin / 60)
         const m = leg.durationMin % 60
         const setDuration = (min: number) =>
@@ -38,7 +41,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
             <div className="flex items-center justify-between gap-2">
               <span className="head flex items-center gap-2 text-xs">
                 <span className="text-accent">{LEG_ICONS[key]}</span>
-                {LEG_LABELS[key]}
+                {legLabel}
                 <span className="data font-normal text-muted">
                   {formatDuration(leg.durationMin)}
                 </span>
@@ -51,7 +54,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
                     min={0}
                     max={8}
                     value={h}
-                    aria-label={`${LEG_LABELS[key]} hours`}
+                    aria-label={`${legLabel} h`}
                     onChange={(e) => setDuration(Number(e.target.value) * 60 + m)}
                   />
                   <span className="data text-[11px] text-muted">h</span>
@@ -64,7 +67,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
                     max={59}
                     step={bounds.step}
                     value={m}
-                    aria-label={`${LEG_LABELS[key]} minutes`}
+                    aria-label={`${legLabel} min`}
                     onChange={(e) => setDuration(h * 60 + Number(e.target.value))}
                   />
                   <span className="data text-[11px] text-muted">m</span>
@@ -79,18 +82,18 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
                 step={bounds.step}
                 value={leg.durationMin}
                 onChange={setDuration}
-                ariaLabel={`${LEG_LABELS[key]} duration in minutes`}
+                ariaLabel={`${legLabel} min`}
               />
             </div>
 
             {key === 'swim' ? (
-              <p className="mt-1 text-xs text-muted">
-                No carbs in the water — down a gel a few minutes before the start.
-              </p>
+              <p className="mt-1 text-xs text-muted">{t('tri.swimNote')}</p>
             ) : (
               <div className="mt-2 border-t border-dashed border-line pt-2.5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="head text-[11px] text-muted">Carb target</span>
+                  <span className="head text-[11px] text-muted">
+                    {t('tri.carbTarget')}
+                  </span>
                   <NumberField
                     min={CARBS_MIN}
                     max={CARBS_MAX}
@@ -98,7 +101,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
                     value={leg.carbsPerHour}
                     onChange={(carbsPerHour) => onChange(key, { carbsPerHour })}
                     unit="g/h"
-                    ariaLabel={`${LEG_LABELS[key]} carbohydrates per hour`}
+                    ariaLabel={`${legLabel} g/h`}
                   />
                 </div>
                 <div className="mt-1.5">
@@ -108,7 +111,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
                     step={5}
                     value={leg.carbsPerHour}
                     onChange={(carbsPerHour) => onChange(key, { carbsPerHour })}
-                    ariaLabel={`${LEG_LABELS[key]} carbohydrates per hour`}
+                    ariaLabel={`${legLabel} g/h`}
                   />
                 </div>
               </div>

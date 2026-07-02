@@ -2,6 +2,7 @@ import { Check, ImageDown, Link2 } from 'lucide-react'
 import { useState } from 'react'
 import { toPng } from 'html-to-image'
 import type { PlanInput } from '../lib/fueling'
+import { useI18n } from '../lib/i18n'
 import { buildShareUrl } from '../lib/share'
 
 interface ExportBarProps {
@@ -10,6 +11,7 @@ interface ExportBarProps {
 }
 
 export function ExportBar({ input, exportTarget }: ExportBarProps) {
+  const { t } = useI18n()
   const [copied, setCopied] = useState(false)
   const [exporting, setExporting] = useState(false)
 
@@ -48,7 +50,7 @@ export function ExportBar({ input, exportTarget }: ExportBarProps) {
         className="head flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 text-xs text-accent-ink transition-all duration-150 hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
       >
         <ImageDown className="size-4" />
-        {exporting ? 'Rendering…' : 'Save as image'}
+        {exporting ? t('export.rendering') : t('export.png')}
       </button>
       <button
         type="button"
@@ -60,7 +62,7 @@ export function ExportBar({ input, exportTarget }: ExportBarProps) {
         }`}
       >
         {copied ? <Check className="size-4" /> : <Link2 className="size-4" />}
-        {copied ? 'Link copied' : 'Copy share link'}
+        {copied ? t('export.copied') : t('export.copy')}
       </button>
     </div>
   )

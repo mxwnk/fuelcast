@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Ratio } from '../lib/fueling'
 import { RATIO_PRESETS } from '../lib/fueling'
+import { useI18n } from '../lib/i18n'
 
 interface RatioControlProps {
   value: Ratio
@@ -13,6 +14,7 @@ const isPreset = (ratio: Ratio) =>
   )
 
 export function RatioControl({ value, onChange }: RatioControlProps) {
+  const { t } = useI18n()
   const [custom, setCustom] = useState(() => !isPreset(value))
   const customActive = custom || !isPreset(value)
 
@@ -51,7 +53,7 @@ export function RatioControl({ value, onChange }: RatioControlProps) {
               : 'border-line bg-raised text-muted hover:border-accent hover:text-ink'
           }`}
         >
-          Custom
+          {t('ratio.custom')}
         </button>
       </div>
 
@@ -62,7 +64,7 @@ export function RatioControl({ value, onChange }: RatioControlProps) {
       >
         <div className="overflow-hidden">
           <div className="flex items-center gap-2 rounded-lg border border-line bg-raised px-3 py-2">
-            <span className="text-xs text-muted">Glucose</span>
+            <span className="text-xs text-muted">{t('ratio.glucose')}</span>
             <input
               type="number"
               className="fc-num data w-14 rounded border border-line bg-surface px-2 py-1 text-right text-sm font-semibold outline-none focus:border-accent"
@@ -90,14 +92,13 @@ export function RatioControl({ value, onChange }: RatioControlProps) {
                 if (f >= 0) onChange({ ...value, fructose: f })
               }}
             />
-            <span className="text-xs text-muted">Fructose</span>
+            <span className="text-xs text-muted">{t('ratio.fructose')}</span>
           </div>
         </div>
       </div>
 
       <p className="mt-3 text-xs leading-relaxed text-muted">
-        Glucose and fructose use different gut transporters — combining them
-        raises how many carbs you can absorb per hour.
+        {t('ratio.explainer')}
       </p>
     </div>
   )

@@ -28,6 +28,7 @@ import type {
   RacePreset,
 } from './lib/fueling'
 import { computePlan, DEFAULT_CONFIG, DEFAULT_TRI_LEGS } from './lib/fueling'
+import { useI18n } from './lib/i18n'
 import { hasAdvancedParams, parseShareUrl } from './lib/share'
 
 const DEFAULT_INPUT: PlanInput = {
@@ -41,11 +42,11 @@ const DEFAULT_INPUT: PlanInput = {
 }
 
 const PROMISES = [
-  { icon: Timer, text: 'Race plan in 30 seconds' },
-  { icon: BadgeCheck, text: 'No account · no subscription' },
-  { icon: BotOff, text: 'No AI coach — just sport science' },
-  { icon: WifiOff, text: 'Works offline · nothing stored' },
-]
+  { icon: Timer, key: 'promise.fast' },
+  { icon: BadgeCheck, key: 'promise.free' },
+  { icon: BotOff, key: 'promise.noai' },
+  { icon: WifiOff, key: 'promise.offline' },
+] as const
 
 function useTheme() {
   const [dark, setDark] = useState(() =>
@@ -79,6 +80,7 @@ function Section({ step, title, delay = 0, children }: SectionProps) {
 }
 
 export default function App() {
+  const { t } = useI18n()
   const { dark, toggle } = useTheme()
   const [input, setInput] = useState<PlanInput>(() => ({
     ...DEFAULT_INPUT,
@@ -136,20 +138,20 @@ export default function App() {
       <main className="mx-auto max-w-6xl px-4 pb-20 pt-8 sm:pt-10">
         <div className="rise mb-8">
           <h1 className="head text-3xl leading-none tracking-tight sm:text-4xl">
-            Never bonk<span className="text-accent"> again.</span>
+            {t('hero.title.plain')}
+            <span className="text-accent">{t('hero.title.accent')}</span>
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-            Pick your race, set a carb target, done — hourly fueling targets, a
-            product plan, a DIY bottle recipe and a race timeline.
+            {t('hero.description')}
           </p>
           <ul className="mt-4 flex flex-wrap gap-2">
-            {PROMISES.map(({ icon: Icon, text }) => (
+            {PROMISES.map(({ icon: Icon, key }) => (
               <li
-                key={text}
+                key={key}
                 className="data flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5 text-xs font-medium text-muted"
               >
                 <Icon className="size-3.5 text-accent" />
-                {text}
+                {t(key)}
               </li>
             ))}
           </ul>
@@ -159,7 +161,7 @@ export default function App() {
           {/* Controls */}
           <div className="space-y-6">
             <div className="rise" style={{ animationDelay: '80ms' }}>
-              <Section step={1} title="Sport">
+              <Section step={1} title={t('section.sport')}>
                 <SportSelector
                   value={input.sport}
                   onChange={(sport) => patch({ sport })}
@@ -169,7 +171,7 @@ export default function App() {
 
             {isTri ? (
               <div className="rise" style={{ animationDelay: '160ms' }}>
-                <Section step={2} title="Race legs">
+                <Section step={2} title={t('section.legs')}>
                   <RacePresets input={input} onApply={applyPreset} />
                   <TriLegsControl legs={input.triLegs} onChange={patchLeg} />
                 </Section>
@@ -177,7 +179,7 @@ export default function App() {
             ) : (
               <>
                 <div className="rise" style={{ animationDelay: '160ms' }}>
-                  <Section step={2} title="Race duration">
+                  <Section step={2} title={t('section.duration')}>
                     <RacePresets input={input} onApply={applyPreset} />
                     <DurationControl
                       value={input.durationMin}
@@ -186,7 +188,7 @@ export default function App() {
                   </Section>
                 </div>
                 <div className="rise" style={{ animationDelay: '240ms' }}>
-                  <Section step={3} title="Carb target">
+                  <Section step={3} title={t('section.carbs')}>
                     <CarbControl
                       value={input.carbsPerHour}
                       onChange={(carbsPerHour) => patch({ carbsPerHour })}
@@ -205,7 +207,7 @@ export default function App() {
                 className="head flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-line-strong px-4 py-3 text-xs text-muted transition-colors hover:border-accent hover:text-accent"
               >
                 <SlidersHorizontal className="size-4" />
-                {advanced ? 'Hide advanced options' : 'Advanced options'}
+                {advanced ? t('advanced.hide') : t('advanced.show')}
                 <ChevronDown
                   className={`size-4 transition-transform duration-300 ${
                     advanced ? 'rotate-180' : ''
@@ -221,25 +223,25 @@ export default function App() {
                 }`}
               >
                 <div className="space-y-6 overflow-hidden">
-                  <Section step={advancedStart} title="Glucose : Fructose">
+                  <Section step={advancedStart} title={t('section.ratio')}>
                     <RatioControl
                       value={input.ratio}
                       onChange={(ratio) => patch({ ratio })}
                     />
                   </Section>
-                  <Section step={advancedStart + 1} title="Fuel source">
+                  <Section step={advancedStart + 1} title={t('section.fuelSource')}>
                     <FuelSourceControl
                       useGels={input.useGels}
                       onChange={(useGels) => patch({ useGels })}
                     />
                   </Section>
-                  <Section step={advancedStart + 2} title="Hydration & sodium">
+                  <Section step={advancedStart + 2} title={t('section.hydration')}>
                     <HydrationControl
                       value={input.config.temperature}
                       onChange={(temperature) => patchConfig({ temperature })}
                     />
                   </Section>
-                  <Section step={advancedStart + 3} title="Your gear">
+                  <Section step={advancedStart + 3} title={t('section.gear')}>
                     <AssumptionsControl config={input.config} onChange={patchConfig} />
                   </Section>
                 </div>
@@ -268,15 +270,12 @@ export default function App() {
           style={{ animationDelay: '560ms' }}
         >
           <p>
-            Assumptions: 1 gel ≈ {input.config.gelCarbs} g carbs · 1 bottle ={' '}
-            {input.config.bottleMl} ml · maltodextrin counts as glucose. FuelCast
-            is a planning aid, not medical or nutritional advice — always test
-            your fueling strategy in training.
+            {t('footer.assumptions', {
+              gel: input.config.gelCarbs,
+              bottle: input.config.bottleMl,
+            })}
           </p>
-          <p className="mt-2">
-            Free, open and stateless: no account, no tracking, no data leaves
-            your device — your plan lives entirely in the URL.
-          </p>
+          <p className="mt-2">{t('footer.privacy')}</p>
         </footer>
       </main>
     </div>

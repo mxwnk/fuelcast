@@ -1,6 +1,7 @@
 import { Bike, Footprints, Waves } from 'lucide-react'
 import type { Sport } from '../lib/fueling'
 import { SPORTS } from '../lib/fueling'
+import { useI18n } from '../lib/i18n'
 
 const ICONS: Record<Sport, React.ReactNode> = {
   triathlon: (
@@ -20,9 +21,10 @@ interface SportSelectorProps {
 }
 
 export function SportSelector({ value, onChange }: SportSelectorProps) {
+  const { t } = useI18n()
   return (
-    <div role="radiogroup" aria-label="Sport" className="grid grid-cols-3 gap-2">
-      {SPORTS.map(({ id, label }) => {
+    <div role="radiogroup" aria-label={t('section.sport')} className="grid grid-cols-3 gap-2">
+      {SPORTS.map((id) => {
         const active = id === value
         return (
           <button
@@ -40,7 +42,7 @@ export function SportSelector({ value, onChange }: SportSelectorProps) {
             <span className="transition-transform duration-200 group-hover:-translate-y-0.5 group-active:scale-90">
               {ICONS[id]}
             </span>
-            <span className="head text-xs">{label}</span>
+            <span className="head text-xs">{t(`sport.${id}`)}</span>
           </button>
         )
       })}

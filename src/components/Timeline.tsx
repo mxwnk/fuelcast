@@ -1,6 +1,8 @@
 import { Bike, Droplets, Flag, Footprints, Waves, Zap } from 'lucide-react'
 import type { LegPlan, RacePlan } from '../lib/fueling'
 import { formatClock, formatDuration } from '../lib/fueling'
+import type { TranslateFn } from '../lib/i18n'
+import { useI18n } from '../lib/i18n'
 
 const LEG_ICONS: Record<string, React.ReactNode> = {
   bike: <Bike className="size-3.5" />,
@@ -51,7 +53,7 @@ function LegRail({ leg }: { leg: LegPlan }) {
   )
 }
 
-function LegCadence({ leg }: { leg: LegPlan }) {
+function LegCadence({ leg, t }: { leg: LegPlan; t: TranslateFn }) {
   return (
     <div className="space-y-2">
       {leg.gelIntervalMin && (
@@ -60,8 +62,9 @@ function LegCadence({ leg }: { leg: LegPlan }) {
             <Zap className="size-4" />
           </span>
           <span>
-            Every <strong className="data">{leg.gelIntervalMin} min</strong> — 1 gel (
-            {leg.gelCarbs} g carbs)
+            {t('timeline.every')}{' '}
+            <strong className="data">{leg.gelIntervalMin} min</strong>{' '}
+            {t('timeline.gelSuffix', { g: leg.gelCarbs })}
           </span>
         </p>
       )}
@@ -70,8 +73,10 @@ function LegCadence({ leg }: { leg: LegPlan }) {
           <Droplets className="size-4" />
         </span>
         <span>
-          Every <strong className="data">{leg.sipIntervalMin} min</strong> — sip ~
-          <strong className="data">{leg.sipMl} ml</strong> of your mix
+          {t('timeline.every')}{' '}
+          <strong className="data">{leg.sipIntervalMin} min</strong>{' '}
+          {t('timeline.sipVerb')}
+          <strong className="data">{leg.sipMl} ml</strong> {t('timeline.sipSuffix')}
         </span>
       </p>
     </div>
@@ -83,6 +88,7 @@ interface TimelineProps {
 }
 
 export function Timeline({ plan }: TimelineProps) {
+  const { t } = useI18n()
   const multi = plan.legs.length > 1
   const single = plan.legs[0]
 
@@ -101,14 +107,14 @@ export function Timeline({ plan }: TimelineProps) {
     ? [
         {
           key: 'swim',
-          label: 'Swim',
+          label: t('leg.swim'),
           icon: <Waves className="size-3" />,
           minutes: plan.swimDurationMin,
           fueled: false,
         },
         ...plan.legs.map((leg) => ({
-          key: leg.key,
-          label: leg.label,
+          key: leg.key as string,
+          label: t(`leg.${leg.key}`),
           icon: LEG_ICONS[leg.key],
           minutes: leg.durationMin,
           fueled: true,
@@ -119,11 +125,9 @@ export function Timeline({ plan }: TimelineProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-line bg-surface">
       <div className="border-b border-line px-5 py-3">
-        <p className="head text-sm">Race timeline</p>
+        <p className="head text-sm">{t('timeline.title')}</p>
         <p className="data mt-0.5 text-xs uppercase tracking-wider text-muted">
-          {multi
-            ? 'Hourly pattern per discipline'
-            : 'Repeat this pattern every hour'}
+          {multi ? t('timeline.subtitle.multi') : t('timeline.subtitle.single')}
         </p>
       </div>
 
@@ -134,14 +138,14 @@ export function Timeline({ plan }: TimelineProps) {
               <div key={leg.key}>
                 <p className="head flex items-center gap-1.5 text-xs">
                   <span className="text-accent">{LEG_ICONS[leg.key]}</span>
-                  {leg.label}
+                  {t(`leg.${leg.key}`)}
                   <span className="data font-normal text-muted">
                     {leg.carbsPerHour} g/h
                   </span>
                 </p>
                 <LegRail leg={leg} />
                 <div className="mt-10">
-                  <LegCadence leg={leg} />
+                  <LegCadence leg={leg} t={t} />
                 </div>
                 <div className="roadline mt-4 mb-2 opacity-40" />
               </div>
@@ -151,7 +155,7 @@ export function Timeline({ plan }: TimelineProps) {
           <>
             <LegRail leg={single} />
             <div className="mt-10">
-              <LegCadence leg={single} />
+              <LegCadence leg={single} t={t} />
             </div>
           </>
         )}
@@ -161,15 +165,15 @@ export function Timeline({ plan }: TimelineProps) {
             <Flag className="size-4" />
           </span>
           <span>
-            {multi
-              ? 'Start fueling in the first 15 minutes on the bike — the swim leaves you with empty stores'
-              : 'Start fueling in the first 15 minutes — don’t wait until you’re hungry'}
+            {multi ? t('timeline.start.multi') : t('timeline.start.single')}
           </span>
         </p>
 
         {/* Full race strip */}
         <div className="mt-6">
-          <p className="tick-label head text-xs text-muted">Full race</p>
+          <p className="tick-label head text-xs text-muted">
+            {t('timeline.fullRace')}
+          </p>
           <div className="mt-2 flex h-10 gap-0.5 overflow-hidden rounded-lg">
             {multi
               ? legSegments.map((seg) => (

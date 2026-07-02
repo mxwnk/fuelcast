@@ -39,6 +39,8 @@ no data storage — a race plan in 30 seconds, entirely on your device.
 - **Export** — download the plan as a PNG or copy a shareable URL
   (all state lives in query params: `?s=cycling&d=240&c=90&r=1:0.8`)
 - **Dark / light mode** — follows the system preference, manual toggle persists
+- **English & German** — language switcher in the header, defaults to the
+  browser language, persists locally
 - **PWA** — installable to the home screen and fully offline-capable
   (all assets precached via service worker)
 

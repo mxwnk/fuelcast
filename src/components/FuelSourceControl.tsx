@@ -1,19 +1,5 @@
 import { FlaskConical, Zap } from 'lucide-react'
-
-const OPTIONS = [
-  {
-    useGels: true,
-    label: 'Gels + drink mix',
-    description: 'Shop-bought gels carry part of the carbs, the bottle does the rest',
-    icon: <Zap className="size-5" />,
-  },
-  {
-    useGels: false,
-    label: 'DIY mix only',
-    description: 'Everything goes into the bottle — pure maltodextrin + fructose',
-    icon: <FlaskConical className="size-5" />,
-  },
-]
+import { useI18n } from '../lib/i18n'
 
 interface FuelSourceControlProps {
   useGels: boolean
@@ -21,9 +7,29 @@ interface FuelSourceControlProps {
 }
 
 export function FuelSourceControl({ useGels, onChange }: FuelSourceControlProps) {
+  const { t } = useI18n()
+  const options = [
+    {
+      useGels: true,
+      label: t('fuel.gels.label'),
+      description: t('fuel.gels.desc'),
+      icon: <Zap className="size-5" />,
+    },
+    {
+      useGels: false,
+      label: t('fuel.diy.label'),
+      description: t('fuel.diy.desc'),
+      icon: <FlaskConical className="size-5" />,
+    },
+  ]
+
   return (
-    <div role="radiogroup" aria-label="Fuel source" className="grid grid-cols-2 gap-2">
-      {OPTIONS.map((option) => {
+    <div
+      role="radiogroup"
+      aria-label={t('section.fuelSource')}
+      className="grid grid-cols-2 gap-2"
+    >
+      {options.map((option) => {
         const active = option.useGels === useGels
         return (
           <button

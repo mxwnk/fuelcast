@@ -7,15 +7,19 @@ import {
   Info,
   Zap,
 } from 'lucide-react'
-import type { LegPlan, PlanInput, RacePlan } from '../lib/fueling'
-import { formatDuration, HYDRATION, SPORTS } from '../lib/fueling'
-
-const fmt = (n: number) => Math.round(n).toLocaleString('en-US')
-const fmt1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString('en-US')
+import type { LegPlan, PlanInput, PlanMessage, RacePlan } from '../lib/fueling'
+import { formatDuration, HYDRATION } from '../lib/fueling'
+import type { MessageKey, TranslateFn } from '../lib/i18n'
+import { useI18n } from '../lib/i18n'
 
 const LEG_ICONS: Record<string, React.ReactNode> = {
   bike: <Bike className="size-3.5" />,
   run: <Footprints className="size-3.5" />,
+}
+
+const messageText = (t: TranslateFn, message: PlanMessage) => {
+  const prefix = message.leg ? `${t(`leg.${message.leg}`)}: ` : ''
+  return prefix + t(message.key as MessageKey, message.params)
 }
 
 function SplitBar({ leg }: { leg: LegPlan }) {
@@ -32,96 +36,107 @@ function SplitBar({ leg }: { leg: LegPlan }) {
   )
 }
 
-function ProductChips({ leg }: { leg: LegPlan }) {
-  return (
+export function ResultsPanel({
+  input,
+  plan,
+  advanced,
+}: {
+  input: PlanInput
+  plan: RacePlan
+  advanced: boolean
+}) {
+  const { t, locale } = useI18n()
+  const fmt = (n: number) => Math.round(n).toLocaleString(locale)
+  const fmt1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString(locale)
+  const liters = (l: number) =>
+    l.toLocaleString(locale, { maximumFractionDigits: 2 })
+
+  const multi = plan.legs.length > 1
+  const single = plan.legs[0]
+  const hydration = HYDRATION[plan.temperature]
+
+  const legName = (leg: LegPlan) => t(`leg.${leg.key}`)
+
+  const headerDetail = multi
+    ? plan.legs.map((leg) => `${legName(leg)} ${leg.carbsPerHour} g/h`).join(' · ')
+    : `${single.carbsPerHour} g/h`
+
+  const gelUnit = (n: number) => t(n === 1 ? 'unit.gel' : 'unit.gels')
+  const bottleUnit = (n: number) => t(n === 1 ? 'unit.bottle' : 'unit.bottles')
+
+  const wholeRaceItems = [
+    ...(plan.totalGels > 0 ? [`${plan.totalGels} ${gelUnit(plan.totalGels)}`] : []),
+    `${plan.totalBottles} ${bottleUnit(plan.totalBottles)} (${liters(plan.totalFluidL)} L)`,
+  ].join(' + ')
+
+  const productChips = (leg: LegPlan) => (
     <>
       {leg.gelsPerHour > 0 && (
         <span className="data inline-flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 text-sm font-semibold">
           <Zap className="size-3.5 text-accent" />
-          {leg.gelsPerHour} gel{leg.gelsPerHour > 1 ? 's' : ''}
-          <span className="font-normal text-muted">({leg.gelCarbs} g each)</span>
+          {leg.gelsPerHour} {gelUnit(leg.gelsPerHour)}
+          <span className="font-normal text-muted">
+            {t('results.each', { g: leg.gelCarbs })}
+          </span>
         </span>
       )}
       <span className="data inline-flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 text-sm font-semibold">
         <Droplets className="size-3.5 text-accent" />
-        {leg.fluidMlPerHour} ml drink
+        {t('results.drink', { ml: leg.fluidMlPerHour })}
         <span className="font-normal text-muted">
-          ({fmt(leg.drinkCarbsPerHour)} g mix)
+          {t('results.mix', { g: fmt(leg.drinkCarbsPerHour) })}
         </span>
       </span>
     </>
   )
-}
 
-function DiyRecipe({
-  leg,
-  showLabel,
-  advanced,
-}: {
-  leg: LegPlan
-  showLabel: boolean
-  advanced: boolean
-}) {
-  return (
-    <div className="rounded-xl border border-dashed border-line-strong bg-raised p-4">
+  const diyRecipe = (leg: LegPlan) => (
+    <div
+      key={leg.key}
+      className="rounded-xl border border-dashed border-line-strong bg-raised p-4"
+    >
       <p className="tick-label head text-xs text-muted">
         <FlaskConical className="-ml-1 size-3.5 text-accent" />
-        {showLabel ? `${leg.label} bottle` : 'DIY bottle mix'} ·{' '}
-        {leg.gelsPerHour > 0 ? 'tops up the gels' : `${leg.bottleMl} ml`}
+        {multi ? t('diy.legBottle', { leg: legName(leg) }) : t('diy.title')} ·{' '}
+        {leg.gelsPerHour > 0 ? t('diy.topsUp') : `${leg.bottleMl} ml`}
       </p>
       <ul className="data mt-2.5 space-y-1.5 text-sm">
         <li className="flex justify-between gap-4">
-          <span>Maltodextrin (glucose)</span>
+          <span>{t('diy.malto')}</span>
           <span className="font-bold text-gluc">{fmt(leg.bottleGlucose)} g</span>
         </li>
         <li className="flex justify-between gap-4">
-          <span>Fructose</span>
+          <span>{t('diy.fructose')}</span>
           <span className="font-bold text-fruc">{fmt(leg.bottleFructose)} g</span>
         </li>
         <li className="flex justify-between gap-4">
-          <span>Water</span>
+          <span>{t('diy.water')}</span>
           <span className="font-bold">{leg.bottleMl} ml</span>
         </li>
         {advanced ? (
           <li className="flex justify-between gap-4">
-            <span>Salt (sodium)</span>
+            <span>{t('diy.salt')}</span>
             <span className="font-bold">{fmt1(leg.bottleSaltG)} g</span>
           </li>
         ) : (
           <li className="flex justify-between gap-4 text-muted">
-            <span>Pinch of salt + squeeze of citrus</span>
-            <span>to taste</span>
+            <span>{t('diy.pinch')}</span>
+            <span>{t('diy.toTaste')}</span>
           </li>
         )}
       </ul>
     </div>
   )
-}
 
-interface ResultsPanelProps {
-  input: PlanInput
-  plan: RacePlan
-  advanced: boolean
-}
-
-export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
-  const sportLabel = SPORTS.find((s) => s.id === input.sport)?.label
-  const multi = plan.legs.length > 1
-  const single = plan.legs[0]
-  const hydration = HYDRATION[plan.temperature]
-
-  const headerDetail = multi
-    ? plan.legs.map((leg) => `${leg.label} ${leg.carbsPerHour} g/h`).join(' · ')
-    : `${single.carbsPerHour} g/h`
-
-  const hints = [...plan.hints]
+  const hints = plan.hints.map((hint) => messageText(t, hint))
   if (!advanced) {
     hints.push(
-      `Hydration assumes ${hydration.label.toLowerCase()} conditions (~${
-        hydration.fluidMlPerHour
-      } ml + ~${
-        hydration.sodiumMgPerHour
-      } mg sodium per hour). Open “Advanced options” to tune for heat.`,
+      t('hint.hydration', {
+        temp: t(`temp.adj.${plan.temperature}`),
+        fluid: hydration.fluidMlPerHour,
+        sodium: hydration.sodiumMgPerHour,
+        advanced: t('advanced.show'),
+      }),
     )
   }
 
@@ -130,10 +145,10 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
       {/* Race card header */}
       <div className="flex items-center justify-between bg-ink px-5 py-3 text-bg dark:bg-raised dark:text-ink">
         <div>
-          <p className="head text-sm">Your fuel plan</p>
+          <p className="head text-sm">{t('results.title')}</p>
           <p className="data mt-0.5 text-xs uppercase tracking-wider opacity-60">
-            {sportLabel} · {formatDuration(plan.totalDurationMin)} · {headerDetail} ·{' '}
-            {input.ratio.glucose}:{input.ratio.fructose}
+            {t(`sport.${input.sport}`)} · {formatDuration(plan.totalDurationMin)} ·{' '}
+            {headerDetail} · {input.ratio.glucose}:{input.ratio.fructose}
           </p>
         </div>
         <Zap className="size-5 shrink-0 fill-accent text-accent" />
@@ -148,7 +163,7 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
                 <div className="flex items-end justify-between gap-3">
                   <span className="head flex items-center gap-1.5 text-xs text-muted">
                     <span className="text-accent">{LEG_ICONS[leg.key]}</span>
-                    {leg.label} · {formatDuration(leg.durationMin)} ·{' '}
+                    {legName(leg)} · {formatDuration(leg.durationMin)} ·{' '}
                     {leg.carbsPerHour} g/h
                   </span>
                   <span className="data text-sm font-bold">
@@ -161,8 +176,9 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
               </div>
             ))}
             <p className="head text-right text-[11px] text-muted">
-              <span className="text-gluc">Glucose</span> /{' '}
-              <span className="text-fruc">Fructose</span> per hour
+              <span className="text-gluc">{t('ratio.glucose')}</span> /{' '}
+              <span className="text-fruc">{t('ratio.fructose')}</span>{' '}
+              {t('results.perHour')}
             </p>
           </div>
         ) : (
@@ -173,14 +189,18 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
                   {fmt(single.glucosePerHour)}
                   <span className="text-sm font-medium"> g</span>
                 </p>
-                <p className="head mt-0.5 text-[11px] text-muted">Glucose / h</p>
+                <p className="head mt-0.5 text-[11px] text-muted">
+                  {t('results.glucoseH')}
+                </p>
               </div>
               <div className="text-right">
                 <p className="data text-3xl font-bold text-fruc">
                   {fmt(single.fructosePerHour)}
                   <span className="text-sm font-medium"> g</span>
                 </p>
-                <p className="head mt-0.5 text-[11px] text-muted">Fructose / h</p>
+                <p className="head mt-0.5 text-[11px] text-muted">
+                  {t('results.fructoseH')}
+                </p>
               </div>
             </div>
             <SplitBar leg={single} />
@@ -190,9 +210,12 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
         {/* Race totals */}
         <div className="grid grid-cols-3 gap-2">
           {[
-            { label: 'Total carbs', value: `${fmt(plan.totalCarbs)} g` },
-            { label: 'Total glucose', value: `${fmt(plan.totalGlucose)} g` },
-            { label: 'Total fructose', value: `${fmt(plan.totalFructose)} g` },
+            { label: t('results.totalCarbs'), value: `${fmt(plan.totalCarbs)} g` },
+            { label: t('results.totalGlucose'), value: `${fmt(plan.totalGlucose)} g` },
+            {
+              label: t('results.totalFructose'),
+              value: `${fmt(plan.totalFructose)} g`,
+            },
           ].map(({ label, value }) => (
             <div
               key={label}
@@ -207,55 +230,50 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
         {/* Product suggestion */}
         {input.useGels && (
           <div>
-            <p className="tick-label head text-xs text-muted">
-              Shop-bought · per hour
-            </p>
+            <p className="tick-label head text-xs text-muted">{t('results.shop')}</p>
             {multi ? (
               <div className="mt-2 space-y-2">
                 {plan.legs.map((leg) => (
                   <div key={leg.key} className="flex flex-wrap items-center gap-2">
-                    <span className="head w-9 text-[11px] text-muted">
-                      {leg.label}
+                    <span className="head w-16 text-[11px] text-muted">
+                      {legName(leg)}
                     </span>
-                    <ProductChips leg={leg} />
+                    {productChips(leg)}
                   </div>
                 ))}
               </div>
             ) : (
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <ProductChips leg={single} />
+                {productChips(single)}
               </div>
             )}
             <p className="mt-2 text-xs text-muted">
-              ≈ {plan.totalGels > 0 ? `${plan.totalGels} gels + ` : ''}
-              {plan.totalBottles} bottle{plan.totalBottles > 1 ? 's' : ''} (
-              {plan.totalFluidL.toFixed(2).replace(/\.?0+$/, '')} L) for the whole
-              race.
+              {t('results.wholeRace', { items: wholeRaceItems })}
             </p>
           </div>
         )}
 
         {/* DIY recipe */}
         <div className={multi ? 'grid gap-3 sm:grid-cols-2' : ''}>
-          {plan.legs.map((leg) => (
-            <DiyRecipe key={leg.key} leg={leg} showLabel={multi} advanced={advanced} />
-          ))}
+          {plan.legs.map(diyRecipe)}
         </div>
         <p className="-mt-2 text-xs text-muted">
-          Whole race: {fmt(plan.totalMaltodextrin)} g maltodextrin +{' '}
-          {fmt(plan.totalFructosePowder)} g fructose across {plan.totalBottles}{' '}
-          bottle{plan.totalBottles > 1 ? 's' : ''} (
-          {plan.totalFluidL.toFixed(2).replace(/\.?0+$/, '')} L).
+          {t('diy.wholeRace', {
+            malto: fmt(plan.totalMaltodextrin),
+            fruc: fmt(plan.totalFructosePowder),
+            bottles: `${plan.totalBottles} ${bottleUnit(plan.totalBottles)}`,
+            liters: liters(plan.totalFluidL),
+          })}
         </p>
 
         {/* Warnings */}
         {plan.warnings.map((warning) => (
           <p
-            key={warning}
+            key={warning.key + (warning.leg ?? '')}
             className="flex items-start gap-2 rounded-lg border border-accent/30 bg-accent/8 px-3 py-2.5 text-xs leading-relaxed text-ink"
           >
             <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-accent" />
-            {warning}
+            {messageText(t, warning)}
           </p>
         ))}
 

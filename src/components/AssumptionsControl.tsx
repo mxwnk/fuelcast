@@ -1,5 +1,6 @@
 import type { PlanConfig } from '../lib/fueling'
 import { BOTTLE_SIZES, GEL_SIZES } from '../lib/fueling'
+import { useI18n } from '../lib/i18n'
 import { NumberField } from './Slider'
 
 interface ChipRowProps {
@@ -52,10 +53,11 @@ interface AssumptionsControlProps {
 }
 
 export function AssumptionsControl({ config, onChange }: AssumptionsControlProps) {
+  const { t } = useI18n()
   return (
     <div className="space-y-3">
       <ChipRow
-        label="Carbs per gel"
+        label={t('gear.gel')}
         unit="g"
         options={GEL_SIZES}
         value={config.gelCarbs}
@@ -65,7 +67,7 @@ export function AssumptionsControl({ config, onChange }: AssumptionsControlProps
         onChange={(gelCarbs) => onChange({ gelCarbs })}
       />
       <ChipRow
-        label="Bottle size"
+        label={t('gear.bottle')}
         unit="ml"
         options={BOTTLE_SIZES}
         value={config.bottleMl}
@@ -74,10 +76,7 @@ export function AssumptionsControl({ config, onChange }: AssumptionsControlProps
         step={50}
         onChange={(bottleMl) => onChange({ bottleMl })}
       />
-      <p className="text-xs leading-relaxed text-muted">
-        Match these to your gear: Maurten and most gels are 25 g, SiS Beta Fuel
-        is 40 g. Product counts, recipes and the timeline adapt instantly.
-      </p>
+      <p className="text-xs leading-relaxed text-muted">{t('gear.explainer')}</p>
     </div>
   )
 }

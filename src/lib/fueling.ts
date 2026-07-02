@@ -36,12 +36,10 @@ export interface PlanInput {
 export interface TimelineEvent {
   minute: number
   kind: 'gel' | 'sip'
-  label: string
 }
 
 export interface LegPlan {
   key: LegKey | 'race'
-  label: string
   durationMin: number
   hours: number
   carbsPerHour: number
@@ -78,6 +76,14 @@ export interface LegPlan {
   totalBottles: number
 }
 
+/** Translatable message — resolved to text via the i18n dictionary */
+export interface PlanMessage {
+  key: string
+  /** Prefix the message with this leg's name (triathlon only) */
+  leg?: LegKey
+  params?: Record<string, string | number>
+}
+
 export interface RacePlan {
   /** Fueled legs: bike + run for triathlon, a single leg otherwise */
   legs: LegPlan[]
@@ -93,8 +99,8 @@ export interface RacePlan {
   totalBottles: number
   totalMaltodextrin: number
   totalFructosePowder: number
-  warnings: string[]
-  hints: string[]
+  warnings: PlanMessage[]
+  hints: PlanMessage[]
 }
 
 export const DEFAULT_CONFIG: PlanConfig = {
@@ -108,11 +114,11 @@ export const BOTTLE_SIZES = [500, 750, 950]
 
 export const HYDRATION: Record<
   Temperature,
-  { label: string; hint: string; fluidMlPerHour: number; sodiumMgPerHour: number }
+  { range: string; fluidMlPerHour: number; sodiumMgPerHour: number }
 > = {
-  cool: { label: 'Cool', hint: '< 15°C', fluidMlPerHour: 500, sodiumMgPerHour: 400 },
-  mild: { label: 'Mild', hint: '15–25°C', fluidMlPerHour: 750, sodiumMgPerHour: 600 },
-  hot: { label: 'Hot', hint: '> 25°C', fluidMlPerHour: 1000, sodiumMgPerHour: 900 },
+  cool: { range: '< 15°C', fluidMlPerHour: 500, sodiumMgPerHour: 400 },
+  mild: { range: '15–25°C', fluidMlPerHour: 750, sodiumMgPerHour: 600 },
+  hot: { range: '> 25°C', fluidMlPerHour: 1000, sodiumMgPerHour: 900 },
 }
 
 export const DURATION_MIN = 30
@@ -132,11 +138,7 @@ export const TRI_LEG_BOUNDS: Record<
   run: { min: 20, max: 420, step: 15 },
 }
 
-export const LEG_LABELS: Record<LegKey, string> = {
-  swim: 'Swim',
-  bike: 'Bike',
-  run: 'Run',
-}
+export const LEG_KEYS: LegKey[] = ['swim', 'bike', 'run']
 
 export const DEFAULT_TRI_LEGS: Record<LegKey, LegInput> = {
   swim: { durationMin: 40, carbsPerHour: 0 },
@@ -145,27 +147,27 @@ export const DEFAULT_TRI_LEGS: Record<LegKey, LegInput> = {
 }
 
 export interface RacePreset {
-  label: string
+  id: string
   durationMin?: number
   legs?: Record<LegKey, number>
 }
 
 export const RACE_PRESETS: Record<Sport, RacePreset[]> = {
   triathlon: [
-    { label: 'Sprint', legs: { swim: 20, bike: 45, run: 30 } },
-    { label: 'Olympic', legs: { swim: 30, bike: 75, run: 45 } },
-    { label: '70.3', legs: { swim: 40, bike: 165, run: 105 } },
-    { label: 'Ironman', legs: { swim: 75, bike: 345, run: 240 } },
+    { id: 'sprint', legs: { swim: 20, bike: 45, run: 30 } },
+    { id: 'olympic', legs: { swim: 30, bike: 75, run: 45 } },
+    { id: 'im703', legs: { swim: 40, bike: 165, run: 105 } },
+    { id: 'ironman', legs: { swim: 75, bike: 345, run: 240 } },
   ],
   cycling: [
-    { label: 'Club ride · 2h', durationMin: 120 },
-    { label: 'Fondo · 4h', durationMin: 240 },
-    { label: 'Epic · 6h', durationMin: 360 },
+    { id: 'club', durationMin: 120 },
+    { id: 'fondo', durationMin: 240 },
+    { id: 'epic', durationMin: 360 },
   ],
   running: [
-    { label: 'Half · 1h45', durationMin: 105 },
-    { label: 'Marathon · 3h45', durationMin: 225 },
-    { label: 'Ultra · 6h', durationMin: 360 },
+    { id: 'half', durationMin: 105 },
+    { id: 'marathon', durationMin: 225 },
+    { id: 'ultra', durationMin: 360 },
   ],
 }
 
@@ -175,11 +177,7 @@ export const RATIO_PRESETS: { label: string; ratio: Ratio }[] = [
   { label: '1:1', ratio: { glucose: 1, fructose: 1 } },
 ]
 
-export const SPORTS: { id: Sport; label: string }[] = [
-  { id: 'triathlon', label: 'Triathlon' },
-  { id: 'cycling', label: 'Cycling' },
-  { id: 'running', label: 'Running' },
-]
+export const SPORTS: Sport[] = ['triathlon', 'cycling', 'running']
 
 export function formatDuration(min: number): string {
   const h = Math.floor(min / 60)
@@ -197,7 +195,6 @@ export function formatClock(min: number): string {
 
 function computeLeg(
   key: LegKey | 'race',
-  label: string,
   durationMin: number,
   carbsPerHour: number,
   ratio: Ratio,
@@ -234,20 +231,19 @@ function computeLeg(
 
   const hourlyEvents: TimelineEvent[] = []
   for (let m = sipIntervalMin; m <= 60; m += sipIntervalMin) {
-    hourlyEvents.push({ minute: m, kind: 'sip', label: `Sip ~${sipMl} ml` })
+    hourlyEvents.push({ minute: m, kind: 'sip' })
   }
   if (gelsPerHour > 0 && gelIntervalMin) {
     // Center gels within the hour: 1 gel → :30, 2 → :15/:45, 3 → :10/:30/:50
     for (let i = 0; i < gelsPerHour; i++) {
       const m = Math.round(gelIntervalMin / 2 + i * gelIntervalMin)
-      hourlyEvents.push({ minute: m, kind: 'gel', label: `1 gel (${gelCarbs} g)` })
+      hourlyEvents.push({ minute: m, kind: 'gel' })
     }
   }
   hourlyEvents.sort((a, b) => a.minute - b.minute)
 
   return {
     key,
-    label,
     durationMin,
     hours,
     carbsPerHour,
@@ -286,7 +282,6 @@ export function computePlan(input: PlanInput): RacePlan {
     ? (['bike', 'run'] as const).map((key) =>
         computeLeg(
           key,
-          LEG_LABELS[key],
           input.triLegs[key].durationMin,
           input.triLegs[key].carbsPerHour,
           input.ratio,
@@ -297,7 +292,6 @@ export function computePlan(input: PlanInput): RacePlan {
     : [
         computeLeg(
           'race',
-          'Race',
           input.durationMin,
           input.carbsPerHour,
           input.ratio,
@@ -310,48 +304,44 @@ export function computePlan(input: PlanInput): RacePlan {
   const sum = (pick: (leg: LegPlan) => number) =>
     legs.reduce((acc, leg) => acc + pick(leg), 0)
 
-  const warnings: string[] = []
+  const warnings: PlanMessage[] = []
   for (const leg of legs) {
+    const legRef = isTri && leg.key !== 'race' ? leg.key : undefined
     if (leg.glucosePerHour > 65) {
-      const prefix = isTri ? `${leg.label}: ` : ''
-      warnings.push(
-        `${prefix}Glucose absorption tops out around 60 g/h — this plan delivers ${Math.round(
-          leg.glucosePerHour,
-        )} g/h. Consider shifting to a 1:0.8 ratio.`,
-      )
+      warnings.push({
+        key: 'warn.glucoseCap',
+        leg: legRef,
+        params: { g: Math.round(leg.glucosePerHour) },
+      })
     }
     if (leg.bottleCarbs / leg.bottleMl > 0.12) {
-      const prefix = isTri ? `${leg.label}: ` : ''
-      const concentration = Math.round((leg.bottleCarbs / leg.bottleMl) * 100)
-      warnings.push(
-        `${prefix}${Math.round(leg.bottleCarbs)} g in one ${leg.bottleMl} ml bottle is a ~${concentration}% solution — that's hard on many stomachs. Chase it with plain water on course.`,
-      )
+      warnings.push({
+        key: 'warn.concentration',
+        leg: legRef,
+        params: {
+          g: Math.round(leg.bottleCarbs),
+          ml: leg.bottleMl,
+          pct: Math.round((leg.bottleCarbs / leg.bottleMl) * 100),
+        },
+      })
     }
   }
   if (legs.some((leg) => leg.carbsPerHour >= 90)) {
-    warnings.push(
-      'Intakes of 90 g/h and above need gut training — practice this in workouts before race day.',
-    )
+    warnings.push({ key: 'warn.gutTraining' })
   }
   if (isTri) {
     const [bike, run] = legs
     if (run.carbsPerHour > bike.carbsPerHour) {
-      warnings.push(
-        'Your run target is higher than your bike target — most athletes fuel hardest on the bike, where the gut tolerates more, and back off on the run.',
-      )
+      warnings.push({ key: 'warn.runOverBike' })
     }
   }
 
-  const hints: string[] = []
+  const hints: PlanMessage[] = []
   const fueledMin = sum((l) => l.durationMin)
   if (fueledMin < 90) {
-    hints.push(
-      'Racing under ~90 minutes? Topped-up glycogen stores cover most of it — one bottle of mix or a single gel is plenty.',
-    )
+    hints.push({ key: 'hint.short' })
   } else if (legs.some((l) => l.carbsPerHour >= 70)) {
-    hints.push(
-      'Ease into it: stay at the lower end of your target for the first hour while your gut settles into race rhythm.',
-    )
+    hints.push({ key: 'hint.firstHour' })
   }
 
   return {
