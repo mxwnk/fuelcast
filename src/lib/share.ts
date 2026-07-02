@@ -1,7 +1,14 @@
-import type { LegInput, LegKey, PlanInput, Sport } from './fueling'
+import type {
+  LegInput,
+  LegKey,
+  PlanInput,
+  Sport,
+  Temperature,
+} from './fueling'
 import {
   CARBS_MAX,
   CARBS_MIN,
+  DEFAULT_CONFIG,
   DEFAULT_TRI_LEGS,
   DURATION_MAX,
   DURATION_MIN,
@@ -9,6 +16,7 @@ import {
 } from './fueling'
 
 const SPORT_IDS: Sport[] = ['triathlon', 'cycling', 'running']
+const TEMPERATURES: Temperature[] = ['cool', 'mild', 'hot']
 
 export function buildShareUrl(input: PlanInput): string {
   const params = new URLSearchParams({ s: input.sport })
@@ -24,8 +32,28 @@ export function buildShareUrl(input: PlanInput): string {
     params.set('c', String(input.carbsPerHour))
   }
   params.set('r', `${input.ratio.glucose}:${input.ratio.fructose}`)
+  // Advanced settings travel only when they differ from the defaults
   if (!input.useGels) params.set('g', '0')
+  const { config } = input
+  if (config.temperature !== DEFAULT_CONFIG.temperature) {
+    params.set('t', config.temperature)
+  }
+  if (config.gelCarbs !== DEFAULT_CONFIG.gelCarbs) {
+    params.set('gel', String(config.gelCarbs))
+  }
+  if (config.bottleMl !== DEFAULT_CONFIG.bottleMl) {
+    params.set('btl', String(config.bottleMl))
+  }
   return `${location.origin}${location.pathname}?${params.toString()}`
+}
+
+/** True when a shared link carries settings only visible in advanced mode */
+export function hasAdvancedParams(search: string): boolean {
+  const params = new URLSearchParams(search)
+  if (params.get('g') === '0') return true
+  if (params.has('t') || params.has('gel') || params.has('btl')) return true
+  const r = params.get('r')
+  return r !== null && r !== '1:0.8'
 }
 
 const clamp = (v: number, min: number, max: number) =>
@@ -113,14 +141,33 @@ export function parseShareUrl(search: string): Partial<PlanInput> | null {
 
   const r = params.get('r')
   if (r) {
-    const [g, f] = r.split(':').map(Number)
-    if (Number.isFinite(g) && Number.isFinite(f) && g > 0 && f >= 0) {
+    const [rg, rf] = r.split(':').map(Number)
+    if (Number.isFinite(rg) && Number.isFinite(rf) && rg > 0 && rf >= 0) {
       result.ratio = {
-        glucose: clamp(g, 0.1, 10),
-        fructose: clamp(f, 0, 10),
+        glucose: clamp(rg, 0.1, 10),
+        fructose: clamp(rf, 0, 10),
       }
     }
   }
+
+  const config = { ...DEFAULT_CONFIG }
+  let hasConfig = false
+  const t = params.get('t') as Temperature | null
+  if (t && TEMPERATURES.includes(t)) {
+    config.temperature = t
+    hasConfig = true
+  }
+  const gel = numParam(params, 'gel')
+  if (gel !== null) {
+    config.gelCarbs = clamp(gel, 15, 60)
+    hasConfig = true
+  }
+  const btl = numParam(params, 'btl')
+  if (btl !== null) {
+    config.bottleMl = clamp(btl, 300, 1500)
+    hasConfig = true
+  }
+  if (hasConfig) result.config = config
 
   return Object.keys(result).length ? result : null
 }

@@ -1,6 +1,6 @@
 import { Bike, Droplets, Flag, Footprints, Waves, Zap } from 'lucide-react'
 import type { LegPlan, RacePlan } from '../lib/fueling'
-import { formatClock, formatDuration, GEL_CARBS } from '../lib/fueling'
+import { formatClock, formatDuration } from '../lib/fueling'
 
 const LEG_ICONS: Record<string, React.ReactNode> = {
   bike: <Bike className="size-3.5" />,
@@ -61,7 +61,7 @@ function LegCadence({ leg }: { leg: LegPlan }) {
           </span>
           <span>
             Every <strong className="data">{leg.gelIntervalMin} min</strong> — 1 gel (
-            {GEL_CARBS} g carbs)
+            {leg.gelCarbs} g carbs)
           </span>
         </p>
       )}

@@ -7,17 +7,32 @@ suggestions, a DIY bottle-mix recipe and a minute-by-minute intake timeline.
 
 Fully client-side, stateless, deployable as a static site.
 
+FuelCast is deliberately simple: no account, no subscription, no AI coach,
+no data storage — a race plan in 30 seconds, entirely on your device.
+
 ## Features
 
+**Simple mode (default)** — three inputs and you're done:
+
 - **Sport selection** — Triathlon / Cycling / Running
+- **Race presets** — one tap fills typical durations (Sprint/Olympic/70.3/
+  Ironman, Fondo, Marathon, …)
 - **Race duration** — 30 min to 12 h, 15-min steps (slider + numeric input)
 - **Carb target** — 30–120 g/h with 60 / 90 / 120 g presets
+
+**Advanced options (opt-in)** for athletes who want to dial it in:
 - **Triathlon mode** — per-discipline planning: swim duration (no intake),
   separate duration + carb targets for bike and run, per-leg results,
   recipes and timeline
 - **Glucose:fructose ratio** — 2:1, 1:0.8, 1:1 presets or a custom ratio
 - **Fuel source switch** — gels + drink mix, or 100% DIY bottle mix
   (with a concentration warning for very strong mixes)
+- **Hydration & sodium** — cool/mild/hot conditions scale fluid (500–1000
+  ml/h) and sodium (400–900 mg/h); the DIY recipe shows exact salt grams
+- **Your gear** — configurable gel size (25/30/40 g) and bottle size
+  (500/750/950 ml); all counts, recipes and timelines adapt
+
+**Output & sharing:**
 - **Results** — per-hour glucose/fructose split, race totals, shop-bought
   product combo (gels + drink mix) and a DIY maltodextrin/fructose recipe
 - **Race timeline** — repeating hourly intake pattern plus a full-race strip

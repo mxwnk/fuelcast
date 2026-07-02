@@ -4,12 +4,14 @@ import {
   Droplets,
   FlaskConical,
   Footprints,
+  Info,
   Zap,
 } from 'lucide-react'
 import type { LegPlan, PlanInput, RacePlan } from '../lib/fueling'
-import { BOTTLE_ML, formatDuration, GEL_CARBS, SPORTS } from '../lib/fueling'
+import { formatDuration, HYDRATION, SPORTS } from '../lib/fueling'
 
 const fmt = (n: number) => Math.round(n).toLocaleString('en-US')
+const fmt1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString('en-US')
 
 const LEG_ICONS: Record<string, React.ReactNode> = {
   bike: <Bike className="size-3.5" />,
@@ -37,12 +39,12 @@ function ProductChips({ leg }: { leg: LegPlan }) {
         <span className="data inline-flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 text-sm font-semibold">
           <Zap className="size-3.5 text-accent" />
           {leg.gelsPerHour} gel{leg.gelsPerHour > 1 ? 's' : ''}
-          <span className="font-normal text-muted">({GEL_CARBS} g each)</span>
+          <span className="font-normal text-muted">({leg.gelCarbs} g each)</span>
         </span>
       )}
       <span className="data inline-flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 text-sm font-semibold">
         <Droplets className="size-3.5 text-accent" />
-        {BOTTLE_ML} ml drink
+        {leg.fluidMlPerHour} ml drink
         <span className="font-normal text-muted">
           ({fmt(leg.drinkCarbsPerHour)} g mix)
         </span>
@@ -51,35 +53,46 @@ function ProductChips({ leg }: { leg: LegPlan }) {
   )
 }
 
-function DiyRecipe({ leg, showLabel }: { leg: LegPlan; showLabel: boolean }) {
+function DiyRecipe({
+  leg,
+  showLabel,
+  advanced,
+}: {
+  leg: LegPlan
+  showLabel: boolean
+  advanced: boolean
+}) {
   return (
     <div className="rounded-xl border border-dashed border-line-strong bg-raised p-4">
       <p className="tick-label head text-xs text-muted">
         <FlaskConical className="-ml-1 size-3.5 text-accent" />
         {showLabel ? `${leg.label} bottle` : 'DIY bottle mix'} ·{' '}
-        {leg.gelsPerHour > 0 ? 'tops up the gels each hour' : 'fuels 1 hour'}
+        {leg.gelsPerHour > 0 ? 'tops up the gels' : `${leg.bottleMl} ml`}
       </p>
       <ul className="data mt-2.5 space-y-1.5 text-sm">
         <li className="flex justify-between gap-4">
           <span>Maltodextrin (glucose)</span>
-          <span className="font-bold text-gluc">
-            {fmt(leg.drinkGlucosePerHour)} g
-          </span>
+          <span className="font-bold text-gluc">{fmt(leg.bottleGlucose)} g</span>
         </li>
         <li className="flex justify-between gap-4">
           <span>Fructose</span>
-          <span className="font-bold text-fruc">
-            {fmt(leg.drinkFructosePerHour)} g
-          </span>
+          <span className="font-bold text-fruc">{fmt(leg.bottleFructose)} g</span>
         </li>
         <li className="flex justify-between gap-4">
           <span>Water</span>
-          <span className="font-bold">{BOTTLE_ML} ml</span>
+          <span className="font-bold">{leg.bottleMl} ml</span>
         </li>
-        <li className="flex justify-between gap-4 text-muted">
-          <span>Pinch of salt + squeeze of citrus</span>
-          <span>to taste</span>
-        </li>
+        {advanced ? (
+          <li className="flex justify-between gap-4">
+            <span>Salt (sodium)</span>
+            <span className="font-bold">{fmt1(leg.bottleSaltG)} g</span>
+          </li>
+        ) : (
+          <li className="flex justify-between gap-4 text-muted">
+            <span>Pinch of salt + squeeze of citrus</span>
+            <span>to taste</span>
+          </li>
+        )}
       </ul>
     </div>
   )
@@ -88,16 +101,29 @@ function DiyRecipe({ leg, showLabel }: { leg: LegPlan; showLabel: boolean }) {
 interface ResultsPanelProps {
   input: PlanInput
   plan: RacePlan
+  advanced: boolean
 }
 
-export function ResultsPanel({ input, plan }: ResultsPanelProps) {
+export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
   const sportLabel = SPORTS.find((s) => s.id === input.sport)?.label
   const multi = plan.legs.length > 1
   const single = plan.legs[0]
+  const hydration = HYDRATION[plan.temperature]
 
   const headerDetail = multi
     ? plan.legs.map((leg) => `${leg.label} ${leg.carbsPerHour} g/h`).join(' · ')
     : `${single.carbsPerHour} g/h`
+
+  const hints = [...plan.hints]
+  if (!advanced) {
+    hints.push(
+      `Hydration assumes ${hydration.label.toLowerCase()} conditions (~${
+        hydration.fluidMlPerHour
+      } ml + ~${
+        hydration.sodiumMgPerHour
+      } mg sodium per hour). Open “Advanced options” to tune for heat.`,
+    )
+  }
 
   return (
     <div className="overflow-hidden rounded-2xl border border-line bg-surface">
@@ -180,38 +206,39 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
 
         {/* Product suggestion */}
         {input.useGels && (
-        <div>
-          <p className="tick-label head text-xs text-muted">
-            Shop-bought · per hour
-          </p>
-          {multi ? (
-            <div className="mt-2 space-y-2">
-              {plan.legs.map((leg) => (
-                <div key={leg.key} className="flex flex-wrap items-center gap-2">
-                  <span className="head w-9 text-[11px] text-muted">
-                    {leg.label}
-                  </span>
-                  <ProductChips leg={leg} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <ProductChips leg={single} />
-            </div>
-          )}
-          <p className="mt-2 text-xs text-muted">
-            ≈ {plan.totalGels > 0 ? `${plan.totalGels} gels + ` : ''}
-            {plan.totalBottles} bottle{plan.totalBottles > 1 ? 's' : ''} (
-            {plan.totalFluidL.toFixed(2).replace(/\.?0+$/, '')} L) for the whole race.
-          </p>
-        </div>
+          <div>
+            <p className="tick-label head text-xs text-muted">
+              Shop-bought · per hour
+            </p>
+            {multi ? (
+              <div className="mt-2 space-y-2">
+                {plan.legs.map((leg) => (
+                  <div key={leg.key} className="flex flex-wrap items-center gap-2">
+                    <span className="head w-9 text-[11px] text-muted">
+                      {leg.label}
+                    </span>
+                    <ProductChips leg={leg} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <ProductChips leg={single} />
+              </div>
+            )}
+            <p className="mt-2 text-xs text-muted">
+              ≈ {plan.totalGels > 0 ? `${plan.totalGels} gels + ` : ''}
+              {plan.totalBottles} bottle{plan.totalBottles > 1 ? 's' : ''} (
+              {plan.totalFluidL.toFixed(2).replace(/\.?0+$/, '')} L) for the whole
+              race.
+            </p>
+          </div>
         )}
 
         {/* DIY recipe */}
         <div className={multi ? 'grid gap-3 sm:grid-cols-2' : ''}>
           {plan.legs.map((leg) => (
-            <DiyRecipe key={leg.key} leg={leg} showLabel={multi} />
+            <DiyRecipe key={leg.key} leg={leg} showLabel={multi} advanced={advanced} />
           ))}
         </div>
         <p className="-mt-2 text-xs text-muted">
@@ -229,6 +256,17 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
           >
             <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-accent" />
             {warning}
+          </p>
+        ))}
+
+        {/* Hints */}
+        {hints.map((hint) => (
+          <p
+            key={hint}
+            className="flex items-start gap-2 rounded-lg border border-line bg-raised px-3 py-2.5 text-xs leading-relaxed text-muted"
+          >
+            <Info className="mt-0.5 size-3.5 shrink-0 text-accent" />
+            {hint}
           </p>
         ))}
       </div>

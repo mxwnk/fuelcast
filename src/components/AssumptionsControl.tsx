@@ -1,0 +1,83 @@
+import type { PlanConfig } from '../lib/fueling'
+import { BOTTLE_SIZES, GEL_SIZES } from '../lib/fueling'
+import { NumberField } from './Slider'
+
+interface ChipRowProps {
+  label: string
+  unit: string
+  options: number[]
+  value: number
+  min: number
+  max: number
+  step: number
+  onChange: (value: number) => void
+}
+
+function ChipRow({ label, unit, options, value, min, max, step, onChange }: ChipRowProps) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <span className="head text-[11px] text-muted">{label}</span>
+      <div className="flex items-center gap-1.5">
+        {options.map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onChange(option)}
+            className={`data rounded-lg border px-2.5 py-1.5 text-sm font-semibold transition-all duration-150 active:scale-95 ${
+              value === option
+                ? 'border-accent bg-accent text-accent-ink'
+                : 'border-line bg-raised text-muted hover:border-accent hover:text-ink'
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+        <NumberField
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={onChange}
+          unit={unit}
+          ariaLabel={label}
+        />
+      </div>
+    </div>
+  )
+}
+
+interface AssumptionsControlProps {
+  config: PlanConfig
+  onChange: (patch: Partial<PlanConfig>) => void
+}
+
+export function AssumptionsControl({ config, onChange }: AssumptionsControlProps) {
+  return (
+    <div className="space-y-3">
+      <ChipRow
+        label="Carbs per gel"
+        unit="g"
+        options={GEL_SIZES}
+        value={config.gelCarbs}
+        min={15}
+        max={60}
+        step={5}
+        onChange={(gelCarbs) => onChange({ gelCarbs })}
+      />
+      <ChipRow
+        label="Bottle size"
+        unit="ml"
+        options={BOTTLE_SIZES}
+        value={config.bottleMl}
+        min={300}
+        max={1500}
+        step={50}
+        onChange={(bottleMl) => onChange({ bottleMl })}
+      />
+      <p className="text-xs leading-relaxed text-muted">
+        Match these to your gear: Maurten and most gels are 25 g, SiS Beta Fuel
+        is 40 g. Product counts, recipes and the timeline adapt instantly.
+      </p>
+    </div>
+  )
+}
