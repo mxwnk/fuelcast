@@ -17,7 +17,7 @@ export function Header({ dark, onToggleTheme }: HeaderProps) {
             <span className="head text-lg tracking-tight">
               Fuel<span className="text-accent">Cast</span>
             </span>
-            <p className="data mt-0.5 text-[10px] uppercase tracking-widest text-muted">
+            <p className="data mt-0.5 text-[11px] uppercase tracking-widest text-muted">
               Endurance fueling calc
             </p>
           </div>

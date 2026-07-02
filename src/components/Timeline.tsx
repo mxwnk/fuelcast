@@ -35,16 +35,16 @@ function LegRail({ leg }: { leg: LegPlan }) {
           style={{ left: `${(event.minute / 60) * 100}%` }}
         >
           <Droplets className="mx-auto size-3.5 text-muted" />
-          <span className="data mt-0.5 block text-[9px] text-muted">
+          <span className="data mt-0.5 block text-[11px] text-muted">
             :{String(event.minute).padStart(2, '0')}
           </span>
         </div>
       ))}
 
-      <span className="data absolute -left-1 -top-5 text-[10px] font-bold text-muted">
+      <span className="data absolute -left-1 -top-5 text-[11px] font-bold text-muted">
         :00
       </span>
-      <span className="data absolute -right-1 -top-5 text-[10px] font-bold text-muted">
+      <span className="data absolute -right-1 -top-5 text-[11px] font-bold text-muted">
         :60
       </span>
     </div>
@@ -120,7 +120,7 @@ export function Timeline({ plan }: TimelineProps) {
     <div className="overflow-hidden rounded-2xl border border-line bg-surface">
       <div className="border-b border-line px-5 py-3">
         <p className="head text-sm">Race timeline</p>
-        <p className="data mt-0.5 text-[11px] uppercase tracking-wider text-muted">
+        <p className="data mt-0.5 text-xs uppercase tracking-wider text-muted">
           {multi
             ? 'Hourly pattern per discipline'
             : 'Repeat this pattern every hour'}
@@ -132,7 +132,7 @@ export function Timeline({ plan }: TimelineProps) {
           <div className="space-y-2">
             {plan.legs.map((leg) => (
               <div key={leg.key}>
-                <p className="head flex items-center gap-1.5 text-[11px]">
+                <p className="head flex items-center gap-1.5 text-xs">
                   <span className="text-accent">{LEG_ICONS[leg.key]}</span>
                   {leg.label}
                   <span className="data font-normal text-muted">
@@ -169,7 +169,7 @@ export function Timeline({ plan }: TimelineProps) {
 
         {/* Full race strip */}
         <div className="mt-6">
-          <p className="tick-label head text-[11px] text-muted">Full race</p>
+          <p className="tick-label head text-xs text-muted">Full race</p>
           <div className="mt-2 flex h-10 gap-0.5 overflow-hidden rounded-lg">
             {multi
               ? legSegments.map((seg) => (
@@ -180,11 +180,11 @@ export function Timeline({ plan }: TimelineProps) {
                     }`}
                     style={{ flexGrow: Math.max(seg.minutes, 1), flexBasis: 0 }}
                   >
-                    <span className="head flex items-center gap-1 text-[9px] text-muted">
+                    <span className="head flex items-center gap-1 text-[11px] text-muted">
                       {seg.icon}
                       <span className="max-sm:hidden">{seg.label}</span>
                     </span>
-                    <span className="data mt-0.5 text-[9px] font-bold">
+                    <span className="data mt-0.5 text-[11px] font-bold">
                       {formatDuration(seg.minutes)}
                     </span>
                     {!seg.fueled && (
@@ -199,7 +199,7 @@ export function Timeline({ plan }: TimelineProps) {
                     style={{ flexGrow: width, flexBasis: 0 }}
                   >
                     {width === 1 && (
-                      <span className="data text-[10px] font-bold text-muted">
+                      <span className="data text-[11px] font-bold text-muted">
                         H{i + 1}
                       </span>
                     )}
@@ -209,7 +209,7 @@ export function Timeline({ plan }: TimelineProps) {
                   </div>
                 ))}
           </div>
-          <div className="data mt-1 flex justify-between text-[10px] text-muted">
+          <div className="data mt-1 flex justify-between text-[11px] text-muted">
             <span>0:00</span>
             <span>{formatClock(plan.totalDurationMin)}</span>
           </div>

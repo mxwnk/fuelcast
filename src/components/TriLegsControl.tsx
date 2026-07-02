@@ -36,7 +36,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
         return (
           <div key={key} className="rounded-xl border border-line bg-raised p-3.5">
             <div className="flex items-center justify-between gap-2">
-              <span className="head flex items-center gap-2 text-[11px]">
+              <span className="head flex items-center gap-2 text-xs">
                 <span className="text-accent">{LEG_ICONS[key]}</span>
                 {LEG_LABELS[key]}
                 <span className="data font-normal text-muted">
@@ -54,7 +54,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
                     aria-label={`${LEG_LABELS[key]} hours`}
                     onChange={(e) => setDuration(Number(e.target.value) * 60 + m)}
                   />
-                  <span className="data text-[10px] text-muted">h</span>
+                  <span className="data text-[11px] text-muted">h</span>
                 </label>
                 <label className="flex items-baseline gap-1 rounded-lg border border-line bg-surface px-2 py-1 focus-within:border-accent transition-colors">
                   <input
@@ -67,7 +67,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
                     aria-label={`${LEG_LABELS[key]} minutes`}
                     onChange={(e) => setDuration(h * 60 + Number(e.target.value))}
                   />
-                  <span className="data text-[10px] text-muted">m</span>
+                  <span className="data text-[11px] text-muted">m</span>
                 </label>
               </div>
             </div>
@@ -90,7 +90,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
             ) : (
               <div className="mt-2 border-t border-dashed border-line pt-2.5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="head text-[10px] text-muted">Carb target</span>
+                  <span className="head text-[11px] text-muted">Carb target</span>
                   <NumberField
                     min={CARBS_MIN}
                     max={CARBS_MAX}

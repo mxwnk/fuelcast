@@ -61,7 +61,7 @@ export function DurationControl({ value, onChange }: DurationControlProps) {
           onChange={onChange}
           ariaLabel="Race duration in minutes"
         />
-        <div className="data mt-1 flex justify-between text-[10px] text-muted">
+        <div className="data mt-1 flex justify-between text-[11px] text-muted">
           <span>30min</span>
           <span>3h</span>
           <span>6h</span>

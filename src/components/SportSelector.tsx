@@ -40,7 +40,7 @@ export function SportSelector({ value, onChange }: SportSelectorProps) {
             <span className="transition-transform duration-200 group-hover:-translate-y-0.5 group-active:scale-90">
               {ICONS[id]}
             </span>
-            <span className="head text-[11px]">{label}</span>
+            <span className="head text-xs">{label}</span>
           </button>
         )
       })}

@@ -45,7 +45,7 @@ export function RatioControl({ value, onChange }: RatioControlProps) {
         <button
           type="button"
           onClick={() => setCustom(true)}
-          className={`head rounded-lg border px-2 py-2.5 text-[11px] transition-all duration-150 active:scale-95 ${
+          className={`head rounded-lg border px-2 py-2.5 text-xs transition-all duration-150 active:scale-95 ${
             customActive
               ? 'border-accent bg-accent text-accent-ink'
               : 'border-line bg-raised text-muted hover:border-accent hover:text-ink'

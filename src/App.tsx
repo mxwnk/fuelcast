@@ -163,7 +163,7 @@ export default function App() {
         </div>
 
         <footer
-          className="rise mt-14 border-t border-line pt-5 text-[11px] leading-relaxed text-muted"
+          className="rise mt-14 border-t border-line pt-5 text-xs leading-relaxed text-muted"
           style={{ animationDelay: '560ms' }}
         >
           <p>

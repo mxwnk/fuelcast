@@ -54,7 +54,7 @@ function ProductChips({ leg }: { leg: LegPlan }) {
 function DiyRecipe({ leg, showLabel }: { leg: LegPlan; showLabel: boolean }) {
   return (
     <div className="rounded-xl border border-dashed border-line-strong bg-raised p-4">
-      <p className="tick-label head text-[11px] text-muted">
+      <p className="tick-label head text-xs text-muted">
         <FlaskConical className="-ml-1 size-3.5 text-accent" />
         {showLabel ? `${leg.label} bottle` : 'DIY bottle mix'} ·{' '}
         {leg.gelsPerHour > 0 ? 'tops up the gels each hour' : 'fuels 1 hour'}
@@ -105,7 +105,7 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
       <div className="flex items-center justify-between bg-ink px-5 py-3 text-bg dark:bg-raised dark:text-ink">
         <div>
           <p className="head text-sm">Your fuel plan</p>
-          <p className="data mt-0.5 text-[11px] uppercase tracking-wider opacity-60">
+          <p className="data mt-0.5 text-xs uppercase tracking-wider opacity-60">
             {sportLabel} · {formatDuration(plan.totalDurationMin)} · {headerDetail} ·{' '}
             {input.ratio.glucose}:{input.ratio.fructose}
           </p>
@@ -120,7 +120,7 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
             {plan.legs.map((leg) => (
               <div key={leg.key}>
                 <div className="flex items-end justify-between gap-3">
-                  <span className="head flex items-center gap-1.5 text-[11px] text-muted">
+                  <span className="head flex items-center gap-1.5 text-xs text-muted">
                     <span className="text-accent">{LEG_ICONS[leg.key]}</span>
                     {leg.label} · {formatDuration(leg.durationMin)} ·{' '}
                     {leg.carbsPerHour} g/h
@@ -134,7 +134,7 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
                 <SplitBar leg={leg} />
               </div>
             ))}
-            <p className="head text-right text-[9px] text-muted">
+            <p className="head text-right text-[11px] text-muted">
               <span className="text-gluc">Glucose</span> /{' '}
               <span className="text-fruc">Fructose</span> per hour
             </p>
@@ -147,14 +147,14 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
                   {fmt(single.glucosePerHour)}
                   <span className="text-sm font-medium"> g</span>
                 </p>
-                <p className="head mt-0.5 text-[10px] text-muted">Glucose / h</p>
+                <p className="head mt-0.5 text-[11px] text-muted">Glucose / h</p>
               </div>
               <div className="text-right">
                 <p className="data text-3xl font-bold text-fruc">
                   {fmt(single.fructosePerHour)}
                   <span className="text-sm font-medium"> g</span>
                 </p>
-                <p className="head mt-0.5 text-[10px] text-muted">Fructose / h</p>
+                <p className="head mt-0.5 text-[11px] text-muted">Fructose / h</p>
               </div>
             </div>
             <SplitBar leg={single} />
@@ -173,7 +173,7 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
               className="rounded-xl border border-line bg-raised px-3 py-2.5"
             >
               <p className="data text-lg font-bold">{value}</p>
-              <p className="head mt-0.5 text-[9px] text-muted">{label}</p>
+              <p className="head mt-0.5 text-[11px] text-muted">{label}</p>
             </div>
           ))}
         </div>
@@ -181,14 +181,14 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
         {/* Product suggestion */}
         {input.useGels && (
         <div>
-          <p className="tick-label head text-[11px] text-muted">
+          <p className="tick-label head text-xs text-muted">
             Shop-bought · per hour
           </p>
           {multi ? (
             <div className="mt-2 space-y-2">
               {plan.legs.map((leg) => (
                 <div key={leg.key} className="flex flex-wrap items-center gap-2">
-                  <span className="head w-9 text-[10px] text-muted">
+                  <span className="head w-9 text-[11px] text-muted">
                     {leg.label}
                   </span>
                   <ProductChips leg={leg} />

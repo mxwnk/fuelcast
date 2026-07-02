@@ -54,6 +54,8 @@
 
 html {
   background: var(--bg);
+  /* Slightly larger base so rem-based sizes stay readable */
+  font-size: 106.25%; /* 17px */
 }
 
 /* Tailwind v4 preflight no longer sets this — restore v3 behavior */

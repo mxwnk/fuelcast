@@ -45,7 +45,7 @@ export function FuelSourceControl({ useGels, onChange }: FuelSourceControlProps)
             >
               {option.icon}
             </span>
-            <span className={`head text-[11px] ${active ? 'text-accent' : 'text-ink'}`}>
+            <span className={`head text-xs ${active ? 'text-accent' : 'text-ink'}`}>
               {option.label}
             </span>
             <span className="text-xs leading-snug text-muted">
