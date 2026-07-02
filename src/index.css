@@ -1,0 +1,220 @@
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/jetbrains-mono';
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #f2f1ec;
+  --surface: #fbfaf7;
+  --raised: #ffffff;
+  --line: #e0ded5;
+  --line-strong: #c9c6ba;
+  --ink: #171a1f;
+  --muted: #6d7480;
+  --accent: #e84a00;
+  --accent-ink: #ffffff;
+  --gluc: #e84a00;
+  --fruc: #c98a00;
+  --track: #e4e2d9;
+  --glow: rgba(232, 74, 0, 0.18);
+}
+
+.dark {
+  --bg: #0b0d10;
+  --surface: #12151a;
+  --raised: #181c23;
+  --line: #232a33;
+  --line-strong: #333c48;
+  --ink: #f1f2ee;
+  --muted: #8b929c;
+  --accent: #ff5a1f;
+  --accent-ink: #14100d;
+  --gluc: #ff5a1f;
+  --fruc: #ffb224;
+  --track: #232a33;
+  --glow: rgba(255, 90, 31, 0.25);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-gluc: var(--gluc);
+  --color-fruc: var(--fruc);
+  --font-display: 'Archivo Variable', ui-sans-serif, sans-serif;
+  --font-data: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Athletic broadcast-style headings: expanded Archivo, heavy, uppercase */
+.head {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.data {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Section label with leading tick, like telemetry overlays */
+.tick-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tick-label::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+/* ---- Custom range slider ---- */
+.fc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+  --fill: 50%;
+}
+.fc-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--fill),
+    var(--track) var(--fill)
+  );
+}
+.fc-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--track);
+}
+.fc-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+.fc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--raised);
+  border: 3px solid var(--accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.fc-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--raised);
+  border: 3px solid var(--accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.fc-slider:hover::-webkit-slider-thumb,
+.fc-slider:focus-visible::-webkit-slider-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 8px var(--glow);
+}
+.fc-slider:active::-webkit-slider-thumb {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 10px var(--glow);
+}
+.fc-slider:hover::-moz-range-thumb,
+.fc-slider:active::-moz-range-thumb {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 8px var(--glow);
+}
+.fc-slider:focus-visible {
+  outline: none;
+}
+
+/* ---- Number input spinners off ---- */
+.fc-num::-webkit-outer-spin-button,
+.fc-num::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.fc-num {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ---- Staggered page-load reveal ---- */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ---- Hazard stripe accent (race barrier tape) ---- */
+.hazard {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--accent) 0 10px,
+    transparent 10px 20px
+  );
+  opacity: 0.9;
+}
+
+/* Dashed road-marking separator */
+.roadline {
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--line-strong) 0 18px,
+    transparent 18px 30px
+  );
+  height: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
