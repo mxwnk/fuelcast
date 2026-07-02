@@ -1,14 +1,24 @@
 export type Sport = 'triathlon' | 'cycling' | 'running'
+export type LegKey = 'swim' | 'bike' | 'run'
 
 export interface Ratio {
   glucose: number
   fructose: number
 }
 
-export interface PlanInput {
-  sport: Sport
+export interface LegInput {
   durationMin: number
   carbsPerHour: number
+}
+
+export interface PlanInput {
+  sport: Sport
+  /** Used for cycling and running */
+  durationMin: number
+  /** Used for cycling and running */
+  carbsPerHour: number
+  /** Per-discipline splits, only used when sport is triathlon */
+  triLegs: Record<LegKey, LegInput>
   ratio: Ratio
 }
 
@@ -18,8 +28,12 @@ export interface TimelineEvent {
   label: string
 }
 
-export interface FuelPlan {
+export interface LegPlan {
+  key: LegKey | 'race'
+  label: string
+  durationMin: number
   hours: number
+  carbsPerHour: number
   glucosePerHour: number
   fructosePerHour: number
   totalCarbs: number
@@ -35,12 +49,26 @@ export interface FuelPlan {
   sipMl: number
   /** One-hour repeating pattern */
   hourlyEvents: TimelineEvent[]
-  /** Race totals */
+  /** Leg totals */
   totalGels: number
   totalFluidL: number
+  totalBottles: number
+}
+
+export interface RacePlan {
+  /** Fueled legs: bike + run for triathlon, a single leg otherwise */
+  legs: LegPlan[]
+  /** Swim duration counts toward race time but carries no intake */
+  swimDurationMin: number
+  totalDurationMin: number
+  totalCarbs: number
+  totalGlucose: number
+  totalFructose: number
+  totalGels: number
+  totalFluidL: number
+  totalBottles: number
   totalMaltodextrin: number
   totalFructosePowder: number
-  totalBottles: number
   warnings: string[]
 }
 
@@ -54,6 +82,27 @@ export const DURATION_STEP = 15
 export const CARBS_MIN = 30
 export const CARBS_MAX = 120
 export const CARB_PRESETS = [60, 90, 120]
+
+export const TRI_LEG_BOUNDS: Record<
+  LegKey,
+  { min: number; max: number; step: number }
+> = {
+  swim: { min: 10, max: 150, step: 5 },
+  bike: { min: 30, max: 480, step: 15 },
+  run: { min: 20, max: 420, step: 15 },
+}
+
+export const LEG_LABELS: Record<LegKey, string> = {
+  swim: 'Swim',
+  bike: 'Bike',
+  run: 'Run',
+}
+
+export const DEFAULT_TRI_LEGS: Record<LegKey, LegInput> = {
+  swim: { durationMin: 40, carbsPerHour: 0 },
+  bike: { durationMin: 165, carbsPerHour: 90 },
+  run: { durationMin: 110, carbsPerHour: 65 },
+}
 
 export const RATIO_PRESETS: { label: string; ratio: Ratio }[] = [
   { label: '2:1', ratio: { glucose: 2, fructose: 1 } },
@@ -81,16 +130,17 @@ export function formatClock(min: number): string {
   return `${h}:${String(m).padStart(2, '0')}`
 }
 
-export function computePlan(input: PlanInput): FuelPlan {
-  const { durationMin, carbsPerHour, ratio } = input
+function computeLeg(
+  key: LegKey | 'race',
+  label: string,
+  durationMin: number,
+  carbsPerHour: number,
+  ratio: Ratio,
+): LegPlan {
   const hours = durationMin / 60
   const parts = ratio.glucose + ratio.fructose
   const glucosePerHour = (carbsPerHour * ratio.glucose) / parts
   const fructosePerHour = (carbsPerHour * ratio.fructose) / parts
-
-  const totalCarbs = carbsPerHour * hours
-  const totalGlucose = glucosePerHour * hours
-  const totalFructose = fructosePerHour * hours
 
   // Recommended combo: one 750 ml bottle per hour carries the drink mix,
   // gels cover whatever a moderate mix concentration doesn't.
@@ -98,8 +148,7 @@ export function computePlan(input: PlanInput): FuelPlan {
   const drinkCarbsPerHour = carbsPerHour - gelsPerHour * GEL_CARBS
   const fluidMlPerHour = BOTTLE_ML
 
-  const gelIntervalMin =
-    gelsPerHour > 0 ? Math.round(60 / gelsPerHour) : null
+  const gelIntervalMin = gelsPerHour > 0 ? Math.round(60 / gelsPerHour) : null
   const sipIntervalMin = 15
   const sipMl = Math.round(BOTTLE_ML / (60 / sipIntervalMin) / 10) * 10
 
@@ -116,31 +165,17 @@ export function computePlan(input: PlanInput): FuelPlan {
   }
   hourlyEvents.sort((a, b) => a.minute - b.minute)
 
-  const totalGels = Math.ceil(gelsPerHour * hours)
-  const totalFluidL = (fluidMlPerHour * hours) / 1000
-  const totalBottles = Math.ceil((fluidMlPerHour * hours) / BOTTLE_ML)
-
-  const warnings: string[] = []
-  if (glucosePerHour > 65) {
-    warnings.push(
-      `Glucose absorption tops out around 60 g/h — your plan delivers ${Math.round(
-        glucosePerHour,
-      )} g/h. Consider shifting to a 1:0.8 ratio.`,
-    )
-  }
-  if (carbsPerHour >= 90) {
-    warnings.push(
-      'Intakes of 90 g/h and above need gut training — practice this in workouts before race day.',
-    )
-  }
-
   return {
+    key,
+    label,
+    durationMin,
     hours,
+    carbsPerHour,
     glucosePerHour,
     fructosePerHour,
-    totalCarbs,
-    totalGlucose,
-    totalFructose,
+    totalCarbs: carbsPerHour * hours,
+    totalGlucose: glucosePerHour * hours,
+    totalFructose: fructosePerHour * hours,
     gelsPerHour,
     drinkCarbsPerHour,
     fluidMlPerHour,
@@ -148,11 +183,68 @@ export function computePlan(input: PlanInput): FuelPlan {
     sipIntervalMin,
     sipMl,
     hourlyEvents,
-    totalGels,
-    totalFluidL,
-    totalMaltodextrin: totalGlucose,
-    totalFructosePowder: totalFructose,
-    totalBottles,
+    totalGels: Math.ceil(gelsPerHour * hours),
+    totalFluidL: (fluidMlPerHour * hours) / 1000,
+    totalBottles: Math.ceil((fluidMlPerHour * hours) / BOTTLE_ML),
+  }
+}
+
+export function computePlan(input: PlanInput): RacePlan {
+  const isTri = input.sport === 'triathlon'
+
+  const legs: LegPlan[] = isTri
+    ? (['bike', 'run'] as const).map((key) =>
+        computeLeg(
+          key,
+          LEG_LABELS[key],
+          input.triLegs[key].durationMin,
+          input.triLegs[key].carbsPerHour,
+          input.ratio,
+        ),
+      )
+    : [computeLeg('race', 'Race', input.durationMin, input.carbsPerHour, input.ratio)]
+
+  const swimDurationMin = isTri ? input.triLegs.swim.durationMin : 0
+  const sum = (pick: (leg: LegPlan) => number) =>
+    legs.reduce((acc, leg) => acc + pick(leg), 0)
+
+  const warnings: string[] = []
+  for (const leg of legs) {
+    if (leg.glucosePerHour > 65) {
+      const prefix = isTri ? `${leg.label}: ` : ''
+      warnings.push(
+        `${prefix}Glucose absorption tops out around 60 g/h — this plan delivers ${Math.round(
+          leg.glucosePerHour,
+        )} g/h. Consider shifting to a 1:0.8 ratio.`,
+      )
+    }
+  }
+  if (legs.some((leg) => leg.carbsPerHour >= 90)) {
+    warnings.push(
+      'Intakes of 90 g/h and above need gut training — practice this in workouts before race day.',
+    )
+  }
+  if (isTri) {
+    const [bike, run] = legs
+    if (run.carbsPerHour > bike.carbsPerHour) {
+      warnings.push(
+        'Your run target is higher than your bike target — most athletes fuel hardest on the bike, where the gut tolerates more, and back off on the run.',
+      )
+    }
+  }
+
+  return {
+    legs,
+    swimDurationMin,
+    totalDurationMin: swimDurationMin + sum((l) => l.durationMin),
+    totalCarbs: sum((l) => l.totalCarbs),
+    totalGlucose: sum((l) => l.totalGlucose),
+    totalFructose: sum((l) => l.totalFructose),
+    totalGels: sum((l) => l.totalGels),
+    totalFluidL: sum((l) => l.totalFluidL),
+    totalBottles: sum((l) => l.totalBottles),
+    totalMaltodextrin: sum((l) => l.totalGlucose),
+    totalFructosePowder: sum((l) => l.totalFructose),
     warnings,
   }
 }

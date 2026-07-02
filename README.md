@@ -12,6 +12,9 @@ Fully client-side, stateless, deployable as a static site.
 - **Sport selection** — Triathlon / Cycling / Running
 - **Race duration** — 30 min to 12 h, 15-min steps (slider + numeric input)
 - **Carb target** — 30–120 g/h with 60 / 90 / 120 g presets
+- **Triathlon mode** — per-discipline planning: swim duration (no intake),
+  separate duration + carb targets for bike and run, per-leg results,
+  recipes and timeline
 - **Glucose:fructose ratio** — 2:1, 1:0.8, 1:1 presets or a custom ratio
 - **Results** — per-hour glucose/fructose split, race totals, shop-bought
   product combo (gels + drink mix) and a DIY maltodextrin/fructose recipe

@@ -7,14 +7,16 @@ import { RatioControl } from './components/RatioControl'
 import { ResultsPanel } from './components/ResultsPanel'
 import { SportSelector } from './components/SportSelector'
 import { Timeline } from './components/Timeline'
-import type { PlanInput } from './lib/fueling'
-import { computePlan } from './lib/fueling'
+import { TriLegsControl } from './components/TriLegsControl'
+import type { LegInput, LegKey, PlanInput } from './lib/fueling'
+import { computePlan, DEFAULT_TRI_LEGS } from './lib/fueling'
 import { parseShareUrl } from './lib/share'
 
 const DEFAULT_INPUT: PlanInput = {
   sport: 'triathlon',
   durationMin: 300,
   carbsPerHour: 90,
+  triLegs: DEFAULT_TRI_LEGS,
   ratio: { glucose: 1, fructose: 0.8 },
 }
 
@@ -61,6 +63,17 @@ export default function App() {
   const patch = (partial: Partial<PlanInput>) =>
     setInput((prev) => ({ ...prev, ...partial }))
 
+  const patchLeg = (key: LegKey, legPatch: Partial<LegInput>) =>
+    setInput((prev) => ({
+      ...prev,
+      triLegs: {
+        ...prev.triLegs,
+        [key]: { ...prev.triLegs[key], ...legPatch },
+      },
+    }))
+
+  const isTri = input.sport === 'triathlon'
+
   return (
     <div className="min-h-screen">
       <Header dark={dark} onToggleTheme={toggle} />
@@ -86,19 +99,33 @@ export default function App() {
                 onChange={(sport) => patch({ sport })}
               />
             </Section>
-            <Section step={2} title="Race duration" delay={160}>
-              <DurationControl
-                value={input.durationMin}
-                onChange={(durationMin) => patch({ durationMin })}
-              />
-            </Section>
-            <Section step={3} title="Carb target" delay={240}>
-              <CarbControl
-                value={input.carbsPerHour}
-                onChange={(carbsPerHour) => patch({ carbsPerHour })}
-              />
-            </Section>
-            <Section step={4} title="Glucose : Fructose" delay={320}>
+
+            {isTri ? (
+              <Section step={2} title="Race legs" delay={160}>
+                <TriLegsControl legs={input.triLegs} onChange={patchLeg} />
+              </Section>
+            ) : (
+              <>
+                <Section step={2} title="Race duration" delay={160}>
+                  <DurationControl
+                    value={input.durationMin}
+                    onChange={(durationMin) => patch({ durationMin })}
+                  />
+                </Section>
+                <Section step={3} title="Carb target" delay={240}>
+                  <CarbControl
+                    value={input.carbsPerHour}
+                    onChange={(carbsPerHour) => patch({ carbsPerHour })}
+                  />
+                </Section>
+              </>
+            )}
+
+            <Section
+              step={isTri ? 3 : 4}
+              title="Glucose : Fructose"
+              delay={isTri ? 240 : 320}
+            >
               <RatioControl
                 value={input.ratio}
                 onChange={(ratio) => patch({ ratio })}
