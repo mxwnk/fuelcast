@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { CarbControl } from './components/CarbControl'
 import { DurationControl } from './components/DurationControl'
 import { ExportBar } from './components/ExportBar'
+import { FuelSourceControl } from './components/FuelSourceControl'
 import { Header } from './components/Header'
 import { RatioControl } from './components/RatioControl'
 import { ResultsPanel } from './components/ResultsPanel'
@@ -18,6 +19,7 @@ const DEFAULT_INPUT: PlanInput = {
   carbsPerHour: 90,
   triLegs: DEFAULT_TRI_LEGS,
   ratio: { glucose: 1, fructose: 0.8 },
+  useGels: true,
 }
 
 function useTheme() {
@@ -129,6 +131,17 @@ export default function App() {
               <RatioControl
                 value={input.ratio}
                 onChange={(ratio) => patch({ ratio })}
+              />
+            </Section>
+
+            <Section
+              step={isTri ? 4 : 5}
+              title="Fuel source"
+              delay={isTri ? 320 : 400}
+            >
+              <FuelSourceControl
+                useGels={input.useGels}
+                onChange={(useGels) => patch({ useGels })}
               />
             </Section>
           </div>

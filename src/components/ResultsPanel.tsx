@@ -56,16 +56,21 @@ function DiyRecipe({ leg, showLabel }: { leg: LegPlan; showLabel: boolean }) {
     <div className="rounded-xl border border-dashed border-line-strong bg-raised p-4">
       <p className="tick-label head text-[11px] text-muted">
         <FlaskConical className="-ml-1 size-3.5 text-accent" />
-        {showLabel ? `${leg.label} bottle` : 'DIY bottle mix'} · fuels 1 hour
+        {showLabel ? `${leg.label} bottle` : 'DIY bottle mix'} ·{' '}
+        {leg.gelsPerHour > 0 ? 'tops up the gels each hour' : 'fuels 1 hour'}
       </p>
       <ul className="data mt-2.5 space-y-1.5 text-sm">
         <li className="flex justify-between gap-4">
           <span>Maltodextrin (glucose)</span>
-          <span className="font-bold text-gluc">{fmt(leg.glucosePerHour)} g</span>
+          <span className="font-bold text-gluc">
+            {fmt(leg.drinkGlucosePerHour)} g
+          </span>
         </li>
         <li className="flex justify-between gap-4">
           <span>Fructose</span>
-          <span className="font-bold text-fruc">{fmt(leg.fructosePerHour)} g</span>
+          <span className="font-bold text-fruc">
+            {fmt(leg.drinkFructosePerHour)} g
+          </span>
         </li>
         <li className="flex justify-between gap-4">
           <span>Water</span>
@@ -174,6 +179,7 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
         </div>
 
         {/* Product suggestion */}
+        {input.useGels && (
         <div>
           <p className="tick-label head text-[11px] text-muted">
             Shop-bought · per hour
@@ -200,6 +206,7 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
             {plan.totalFluidL.toFixed(2).replace(/\.?0+$/, '')} L) for the whole race.
           </p>
         </div>
+        )}
 
         {/* DIY recipe */}
         <div className={multi ? 'grid gap-3 sm:grid-cols-2' : ''}>
@@ -210,7 +217,8 @@ export function ResultsPanel({ input, plan }: ResultsPanelProps) {
         <p className="-mt-2 text-xs text-muted">
           Whole race: {fmt(plan.totalMaltodextrin)} g maltodextrin +{' '}
           {fmt(plan.totalFructosePowder)} g fructose across {plan.totalBottles}{' '}
-          bottle{plan.totalBottles > 1 ? 's' : ''}.
+          bottle{plan.totalBottles > 1 ? 's' : ''} (
+          {plan.totalFluidL.toFixed(2).replace(/\.?0+$/, '')} L).
         </p>
 
         {/* Warnings */}

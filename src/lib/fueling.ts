@@ -20,6 +20,8 @@ export interface PlanInput {
   /** Per-discipline splits, only used when sport is triathlon */
   triLegs: Record<LegKey, LegInput>
   ratio: Ratio
+  /** false = everything goes into the bottle, no gels */
+  useGels: boolean
 }
 
 export interface TimelineEvent {
@@ -42,6 +44,9 @@ export interface LegPlan {
   /** Recommended product combo per hour */
   gelsPerHour: number
   drinkCarbsPerHour: number
+  /** Bottle-mix composition (drink portion split by the ratio) */
+  drinkGlucosePerHour: number
+  drinkFructosePerHour: number
   fluidMlPerHour: number
   /** Cadence */
   gelIntervalMin: number | null
@@ -136,6 +141,7 @@ function computeLeg(
   durationMin: number,
   carbsPerHour: number,
   ratio: Ratio,
+  useGels: boolean,
 ): LegPlan {
   const hours = durationMin / 60
   const parts = ratio.glucose + ratio.fructose
@@ -144,8 +150,12 @@ function computeLeg(
 
   // Recommended combo: one 750 ml bottle per hour carries the drink mix,
   // gels cover whatever a moderate mix concentration doesn't.
-  const gelsPerHour = Math.max(0, Math.round((carbsPerHour - 40) / GEL_CARBS))
+  const gelsPerHour = useGels
+    ? Math.max(0, Math.round((carbsPerHour - 40) / GEL_CARBS))
+    : 0
   const drinkCarbsPerHour = carbsPerHour - gelsPerHour * GEL_CARBS
+  const drinkGlucosePerHour = (drinkCarbsPerHour * ratio.glucose) / parts
+  const drinkFructosePerHour = (drinkCarbsPerHour * ratio.fructose) / parts
   const fluidMlPerHour = BOTTLE_ML
 
   const gelIntervalMin = gelsPerHour > 0 ? Math.round(60 / gelsPerHour) : null
@@ -178,6 +188,8 @@ function computeLeg(
     totalFructose: fructosePerHour * hours,
     gelsPerHour,
     drinkCarbsPerHour,
+    drinkGlucosePerHour,
+    drinkFructosePerHour,
     fluidMlPerHour,
     gelIntervalMin,
     sipIntervalMin,
@@ -200,9 +212,19 @@ export function computePlan(input: PlanInput): RacePlan {
           input.triLegs[key].durationMin,
           input.triLegs[key].carbsPerHour,
           input.ratio,
+          input.useGels,
         ),
       )
-    : [computeLeg('race', 'Race', input.durationMin, input.carbsPerHour, input.ratio)]
+    : [
+        computeLeg(
+          'race',
+          'Race',
+          input.durationMin,
+          input.carbsPerHour,
+          input.ratio,
+          input.useGels,
+        ),
+      ]
 
   const swimDurationMin = isTri ? input.triLegs.swim.durationMin : 0
   const sum = (pick: (leg: LegPlan) => number) =>
@@ -217,6 +239,17 @@ export function computePlan(input: PlanInput): RacePlan {
           leg.glucosePerHour,
         )} g/h. Consider shifting to a 1:0.8 ratio.`,
       )
+    }
+  }
+  if (!input.useGels) {
+    for (const leg of legs) {
+      if (leg.drinkCarbsPerHour > 90) {
+        const prefix = isTri ? `${leg.label}: ` : ''
+        const concentration = Math.round(leg.drinkCarbsPerHour / (BOTTLE_ML / 100))
+        warnings.push(
+          `${prefix}${Math.round(leg.drinkCarbsPerHour)} g in one ${BOTTLE_ML} ml bottle is a ~${concentration}% solution — that's hard on many stomachs. Chase it with plain water on course.`,
+        )
+      }
     }
   }
   if (legs.some((leg) => leg.carbsPerHour >= 90)) {
@@ -243,8 +276,8 @@ export function computePlan(input: PlanInput): RacePlan {
     totalGels: sum((l) => l.totalGels),
     totalFluidL: sum((l) => l.totalFluidL),
     totalBottles: sum((l) => l.totalBottles),
-    totalMaltodextrin: sum((l) => l.totalGlucose),
-    totalFructosePowder: sum((l) => l.totalFructose),
+    totalMaltodextrin: sum((l) => l.drinkGlucosePerHour * l.hours),
+    totalFructosePowder: sum((l) => l.drinkFructosePerHour * l.hours),
     warnings,
   }
 }

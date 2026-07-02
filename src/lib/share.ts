@@ -24,6 +24,7 @@ export function buildShareUrl(input: PlanInput): string {
     params.set('c', String(input.carbsPerHour))
   }
   params.set('r', `${input.ratio.glucose}:${input.ratio.fructose}`)
+  if (!input.useGels) params.set('g', '0')
   return `${location.origin}${location.pathname}?${params.toString()}`
 }
 
@@ -106,6 +107,9 @@ export function parseShareUrl(search: string): Partial<PlanInput> | null {
   if (result.sport === 'triathlon') {
     result.triLegs = parseTriLegs(params, d, c)
   }
+
+  const g = params.get('g')
+  if (g === '0' || g === '1') result.useGels = g === '1'
 
   const r = params.get('r')
   if (r) {

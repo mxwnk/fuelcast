@@ -16,6 +16,8 @@ Fully client-side, stateless, deployable as a static site.
   separate duration + carb targets for bike and run, per-leg results,
   recipes and timeline
 - **Glucose:fructose ratio** — 2:1, 1:0.8, 1:1 presets or a custom ratio
+- **Fuel source switch** — gels + drink mix, or 100% DIY bottle mix
+  (with a concentration warning for very strong mixes)
 - **Results** — per-hour glucose/fructose split, race totals, shop-bought
   product combo (gels + drink mix) and a DIY maltodextrin/fructose recipe
 - **Race timeline** — repeating hourly intake pattern plus a full-race strip
