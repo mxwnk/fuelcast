@@ -24,6 +24,8 @@ Fully client-side, stateless, deployable as a static site.
 - **Export** — download the plan as a PNG or copy a shareable URL
   (all state lives in query params: `?s=cycling&d=240&c=90&r=1:0.8`)
 - **Dark / light mode** — follows the system preference, manual toggle persists
+- **PWA** — installable to the home screen and fully offline-capable
+  (all assets precached via service worker)
 
 ## Tech stack
 
@@ -38,7 +40,8 @@ Fully client-side, stateless, deployable as a static site.
 npm install
 npm run dev       # start dev server at http://localhost:5173
 npm run build     # type-check + production build to dist/
-npm run preview   # serve the production build locally
+npm run preview   # serve the production build locally (service worker active)
+npm run icons     # regenerate PWA icons from the bolt mark
 ```
 
 ## Deployment
