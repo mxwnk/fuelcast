@@ -147,8 +147,6 @@ const DICT = {
     'footer.disclaimer':
       'Not affiliated with any brand mentioned. Trademarks belong to their respective owners.',
     'footer.source': 'Source on GitHub',
-    'footer.madeBy': 'Made with',
-    'footer.by': 'by',
   },
   de: {
     'app.tagline': 'Ausdauer-Fueling-Rechner',
@@ -295,8 +293,6 @@ const DICT = {
     'footer.disclaimer':
       'Nicht mit den genannten Marken verbunden. Marken gehören ihren jeweiligen Inhabern.',
     'footer.source': 'Quellcode auf GitHub',
-    'footer.madeBy': 'Gemacht mit',
-    'footer.by': 'von',
   },
 } as const
 

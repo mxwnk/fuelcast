@@ -39,10 +39,10 @@ export function Footer({ config }: { config: PlanConfig }) {
           {t('footer.source')}
         </a>
         <p className="flex items-center gap-1.5">
-          <span>© 2026 FuelCast · {t('footer.madeBy')}</span>
+          <span>© {new Date().getFullYear()} FuelCast · Made with</span>
           <Heart className="size-3.5 fill-accent text-accent" />
           <span>
-            {t('footer.by')}{' '}
+            by{' '}
             <a
               href="https://github.com/mxwnk"
               target="_blank"
