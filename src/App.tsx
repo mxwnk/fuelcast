@@ -6,7 +6,7 @@ import {
   Timer,
   WifiOff,
 } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { AssumptionsControl } from './components/AssumptionsControl'
 import { CarbControl } from './components/CarbControl'
 import { DurationControl } from './components/DurationControl'
@@ -16,30 +16,15 @@ import { Header } from './components/Header'
 import { HydrationControl } from './components/HydrationControl'
 import { RacePresets } from './components/RacePresets'
 import { RatioControl } from './components/RatioControl'
-import { ResultsPanel } from './components/ResultsPanel'
+import { ResultsPanel } from './components/results/ResultsPanel'
+import { Section } from './components/Section'
 import { SportSelector } from './components/SportSelector'
 import { Timeline } from './components/Timeline'
 import { TriLegsControl } from './components/TriLegsControl'
-import type {
-  LegInput,
-  LegKey,
-  PlanConfig,
-  PlanInput,
-  RacePreset,
-} from './lib/fueling'
-import { computePlan, DEFAULT_CONFIG, DEFAULT_TRI_LEGS } from './lib/fueling'
+import { useAdvancedMode } from './hooks/useAdvancedMode'
+import { usePlanInput } from './hooks/usePlanInput'
+import { useTheme } from './hooks/useTheme'
 import { useI18n } from './lib/i18n'
-import { hasAdvancedParams, parseShareUrl } from './lib/share'
-
-const DEFAULT_INPUT: PlanInput = {
-  sport: 'triathlon',
-  durationMin: 300,
-  carbsPerHour: 90,
-  triLegs: DEFAULT_TRI_LEGS,
-  ratio: { glucose: 1, fructose: 0.8 },
-  useGels: true,
-  config: DEFAULT_CONFIG,
-}
 
 const PROMISES = [
   { icon: Timer, key: 'promise.fast' },
@@ -48,85 +33,12 @@ const PROMISES = [
   { icon: WifiOff, key: 'promise.offline' },
 ] as const
 
-function useTheme() {
-  const [dark, setDark] = useState(() =>
-    document.documentElement.classList.contains('dark'),
-  )
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', dark)
-    localStorage.setItem('fuelcast-theme', dark ? 'dark' : 'light')
-  }, [dark])
-  return { dark, toggle: () => setDark((d) => !d) }
-}
-
-interface SectionProps {
-  step: number
-  title: string
-  delay?: number
-  children: React.ReactNode
-}
-
-function Section({ step, title, delay = 0, children }: SectionProps) {
-  return (
-    <section className={delay ? 'rise' : ''} style={{ animationDelay: `${delay}ms` }}>
-      <h2 className="tick-label head text-xs text-muted">
-        <span className="data text-accent">0{step}</span> {title}
-      </h2>
-      <div className="mt-2.5 rounded-2xl border border-line bg-surface p-4 sm:p-5">
-        {children}
-      </div>
-    </section>
-  )
-}
-
 export default function App() {
   const { t } = useI18n()
   const { dark, toggle } = useTheme()
-  const [input, setInput] = useState<PlanInput>(() => ({
-    ...DEFAULT_INPUT,
-    ...parseShareUrl(location.search),
-  }))
-  const [advanced, setAdvanced] = useState(
-    () =>
-      hasAdvancedParams(location.search) ||
-      localStorage.getItem('fuelcast-advanced') === '1',
-  )
-  const plan = useMemo(() => computePlan(input), [input])
+  const { advanced, toggleAdvanced } = useAdvancedMode()
+  const { input, plan, patch, patchLeg, patchConfig, applyPreset } = usePlanInput()
   const exportRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    localStorage.setItem('fuelcast-advanced', advanced ? '1' : '0')
-  }, [advanced])
-
-  const patch = (partial: Partial<PlanInput>) =>
-    setInput((prev) => ({ ...prev, ...partial }))
-
-  const patchLeg = (key: LegKey, legPatch: Partial<LegInput>) =>
-    setInput((prev) => ({
-      ...prev,
-      triLegs: {
-        ...prev.triLegs,
-        [key]: { ...prev.triLegs[key], ...legPatch },
-      },
-    }))
-
-  const patchConfig = (configPatch: Partial<PlanConfig>) =>
-    setInput((prev) => ({ ...prev, config: { ...prev.config, ...configPatch } }))
-
-  const applyPreset = (preset: RacePreset) =>
-    setInput((prev) => {
-      if (preset.legs) {
-        return {
-          ...prev,
-          triLegs: {
-            swim: { ...prev.triLegs.swim, durationMin: preset.legs.swim },
-            bike: { ...prev.triLegs.bike, durationMin: preset.legs.bike },
-            run: { ...prev.triLegs.run, durationMin: preset.legs.run },
-          },
-        }
-      }
-      return { ...prev, durationMin: preset.durationMin ?? prev.durationMin }
-    })
 
   const isTri = input.sport === 'triathlon'
   const advancedStart = isTri ? 3 : 4
@@ -203,7 +115,7 @@ export default function App() {
               <button
                 type="button"
                 aria-expanded={advanced}
-                onClick={() => setAdvanced((a) => !a)}
+                onClick={toggleAdvanced}
                 className="head flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-line-strong px-4 py-3 text-xs text-muted transition-colors hover:border-accent hover:text-accent"
               >
                 <SlidersHorizontal className="size-4" />
