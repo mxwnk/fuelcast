@@ -15,6 +15,16 @@ interface ResultsPanelProps {
   advanced: boolean
 }
 
+/** Labelled divider separating the per-hour and whole-race lenses */
+function GroupHeader({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="head text-xs text-accent">{label}</span>
+      <span className="h-px flex-1 bg-line" />
+    </div>
+  )
+}
+
 export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
   const { t, locale } = useI18n()
   const { fmt } = makeFormatters(locale)
@@ -42,9 +52,9 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
       </div>
 
       <div className="space-y-5 p-5">
+        {/* What to consume every hour */}
+        <GroupHeader label={t('results.group.perHour')} />
         <PerHourSplit plan={plan} />
-
-        <ShoppingList plan={plan} advanced={advanced} />
 
         {input.fuelSource !== 'diy' && <ProductsPerHour plan={plan} />}
 
@@ -54,7 +64,10 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
           ))}
         </div>
 
-        {/* Intake totals */}
+        {/* What to buy and pack for the whole race */}
+        <GroupHeader label={t('results.group.race')} />
+        <ShoppingList plan={plan} advanced={advanced} />
+
         <div className="grid grid-cols-3 gap-2">
           {[
             { label: t('results.totalCarbs'), value: `${fmt(plan.totalCarbs)} g` },
