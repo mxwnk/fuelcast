@@ -279,7 +279,9 @@ function computeLeg(
     sipIntervalMin,
     sipMl,
     hourlyEvents,
-    totalGels: Math.ceil(gelsPerHour * hours),
+    totalGels: gelsPerHour > 0
+      ? Math.ceil((carbsPerHour * hours - drinkCarbsPerHour * hours) / gelCarbs)
+      : 0,
     totalFluidL: (fluidMlPerHour * hours) / 1000,
     totalBottles: Math.ceil((fluidMlPerHour * hours) / bottleMl),
   }
