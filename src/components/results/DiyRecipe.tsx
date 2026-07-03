@@ -20,16 +20,12 @@ export function DiyRecipe({ leg, showLegName, advanced }: DiyRecipeProps) {
     : showLegName
       ? t('diy.legBottle', { leg: t(`leg.${leg.key}`) })
       : t('diy.title')
-  const subtitle = waterOnly
-    ? t('diy.waterOnly')
-    : leg.gelsPerHour > 0
-      ? t('diy.topsUp')
-      : `${leg.bottleMl} ml`
+  const subtitle = waterOnly ? t('diy.waterOnly') : `${leg.bottleMl} ml`
 
   return (
     <div className="rounded-xl border border-dashed border-line-strong bg-raised p-4">
-      <p className="tick-label head text-xs text-muted">
-        <FlaskConical className="-ml-1 size-3.5 text-accent" />
+      <p className="head flex items-center gap-1.5 text-xs text-muted">
+        <FlaskConical className="size-3.5 text-accent" />
         {title} · {subtitle}
       </p>
       <ul className="data mt-2.5 space-y-1.5 text-sm">
