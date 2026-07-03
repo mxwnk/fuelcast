@@ -11,7 +11,7 @@ interface HeaderProps {
 }
 
 const LANGS: Lang[] = ['en', 'de']
-const VIEWS: View[] = ['calculator', 'science']
+const NAV_VIEWS = ['calculator', 'science'] as const
 
 export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps) {
   const { lang, setLang, t } = useI18n()
@@ -19,11 +19,15 @@ export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps)
   return (
     <header className="rise sticky top-0 z-20 border-b border-line bg-bg/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-2.5">
+        <button
+          type="button"
+          onClick={() => onChangeView('calculator')}
+          className="flex items-center gap-2.5"
+        >
           <span className="grid size-8 place-items-center rounded-lg bg-ink text-accent dark:bg-raised">
             <Zap className="size-4.5 fill-accent" strokeWidth={1.5} />
           </span>
-          <div className="leading-none">
+          <div className="text-left leading-none">
             <span className="head text-lg tracking-tight">
               Fuel<span className="text-accent">Cast</span>
             </span>
@@ -31,7 +35,7 @@ export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps)
               {t('app.tagline')}
             </p>
           </div>
-        </div>
+        </button>
 
         <div className="flex items-center gap-2">
           {/* View Toggle */}
@@ -40,7 +44,7 @@ export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps)
             aria-label="Navigation"
             className="flex h-9 items-center rounded-full border border-line bg-surface p-1"
           >
-            {VIEWS.map((v) => (
+            {NAV_VIEWS.map((v) => (
               <button
                 key={v}
                 type="button"

@@ -1,5 +1,6 @@
 import { Heart } from 'lucide-react'
 import type { PlanConfig } from '../lib/fueling'
+import type { View } from '../App'
 import { useI18n } from '../lib/i18n'
 
 const REPO_URL = 'https://github.com/mxwnk/fuelcast'
@@ -12,7 +13,12 @@ function GithubMark({ className }: { className?: string }) {
   )
 }
 
-export function Footer({ config }: { config: PlanConfig }) {
+interface FooterProps {
+  config: PlanConfig
+  onNavigate: (view: View) => void
+}
+
+export function Footer({ config, onNavigate }: FooterProps) {
   const { t } = useI18n()
   return (
     <footer
@@ -29,15 +35,27 @@ export function Footer({ config }: { config: PlanConfig }) {
       <p className="mt-2">{t('footer.disclaimer')}</p>
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-        <a
-          href={REPO_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 font-medium transition-colors hover:border-accent hover:text-ink"
-        >
-          <GithubMark className="size-4" />
-          {t('footer.source')}
-        </a>
+        <div className="flex flex-wrap items-center gap-3">
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 font-medium transition-colors hover:border-accent hover:text-ink"
+          >
+            <GithubMark className="size-4" />
+            {t('footer.source')}
+          </a>
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate('imprint')
+              window.scrollTo({ top: 0 })
+            }}
+            className="font-semibold text-muted underline-offset-2 hover:text-accent hover:underline"
+          >
+            {t('footer.imprint')}
+          </button>
+        </div>
         <p className="flex items-center gap-1.5">
           <span>© {new Date().getFullYear()} FuelCast · Made with</span>
           <Heart className="size-3.5 fill-accent text-accent" />

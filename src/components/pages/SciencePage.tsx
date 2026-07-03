@@ -1,5 +1,5 @@
 import { BookOpen, FlaskConical, Gauge, Clock, Activity, Beaker } from 'lucide-react'
-import { useI18n } from '../lib/i18n'
+import { useI18n } from '../../lib/i18n'
 
 const BASE_URL = import.meta.env.BASE_URL
 
