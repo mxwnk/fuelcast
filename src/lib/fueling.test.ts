@@ -14,7 +14,7 @@ const baseInput = (overrides: Partial<PlanInput> = {}): PlanInput => ({
   carbsPerHour: 90,
   triLegs: structuredClone(DEFAULT_TRI_LEGS),
   ratio: { glucose: 1, fructose: 0.8 },
-  useGels: true,
+  fuelSource: 'combo',
   config: { ...DEFAULT_CONFIG },
   ...overrides,
 })
@@ -52,9 +52,25 @@ describe('product combo', () => {
   })
 
   it('puts everything into the bottle in DIY-only mode', () => {
-    const leg = computePlan(baseInput({ useGels: false })).legs[0]
+    const leg = computePlan(baseInput({ fuelSource: 'diy' })).legs[0]
     expect(leg.gelsPerHour).toBe(0)
     expect(leg.drinkCarbsPerHour).toBe(90)
+  })
+
+  it('gets all carbs from gels with a water-only bottle in gels-only mode', () => {
+    const leg = computePlan(baseInput({ fuelSource: 'gels' })).legs[0]
+    // 90 g/h ÷ 25 g gel → ~4 gels, bottle carries no carbs
+    expect(leg.gelsPerHour).toBe(4)
+    expect(leg.drinkCarbsPerHour).toBe(0)
+    expect(leg.bottleGlucose).toBe(0)
+    expect(leg.fluidMlPerHour).toBe(750)
+  })
+
+  it('always suggests at least one gel in gels-only mode', () => {
+    const leg = computePlan(
+      baseInput({ fuelSource: 'gels', carbsPerHour: 30 }),
+    ).legs[0]
+    expect(leg.gelsPerHour).toBe(1)
   })
 
   it('splits the drink portion by the ratio', () => {
@@ -155,7 +171,7 @@ describe('warnings and hints', () => {
   })
 
   it('warns about over-concentrated DIY bottles', () => {
-    const plan = computePlan(baseInput({ carbsPerHour: 120, useGels: false }))
+    const plan = computePlan(baseInput({ carbsPerHour: 120, fuelSource: 'diy' }))
     const warning = plan.warnings.find((w) => w.key === 'warn.concentration')
     expect(warning).toBeDefined()
     expect(warning?.params?.pct).toBe(16)

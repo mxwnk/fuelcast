@@ -15,7 +15,7 @@ const DEFAULT_INPUT: PlanInput = {
   carbsPerHour: 90,
   triLegs: DEFAULT_TRI_LEGS,
   ratio: { glucose: 1, fructose: 0.8 },
-  useGels: true,
+  fuelSource: 'combo',
   config: DEFAULT_CONFIG,
 }
 

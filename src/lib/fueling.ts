@@ -1,6 +1,8 @@
 export type Sport = 'triathlon' | 'cycling' | 'running'
 export type LegKey = 'swim' | 'bike' | 'run'
 export type Temperature = 'cool' | 'mild' | 'hot'
+/** combo = gels + drink mix · gels = gels only (water bottle) · diy = bottle mix only */
+export type FuelSource = 'combo' | 'gels' | 'diy'
 
 export interface Ratio {
   glucose: number
@@ -28,8 +30,7 @@ export interface PlanInput {
   /** Per-discipline splits, only used when sport is triathlon */
   triLegs: Record<LegKey, LegInput>
   ratio: Ratio
-  /** false = everything goes into the bottle, no gels */
-  useGels: boolean
+  fuelSource: FuelSource
   config: PlanConfig
 }
 
@@ -199,7 +200,7 @@ function computeLeg(
   durationMin: number,
   carbsPerHour: number,
   ratio: Ratio,
-  useGels: boolean,
+  fuelSource: FuelSource,
   config: PlanConfig,
 ): LegPlan {
   const { gelCarbs, bottleMl } = config
@@ -210,12 +211,20 @@ function computeLeg(
   const glucosePerHour = (carbsPerHour * ratio.glucose) / parts
   const fructosePerHour = (carbsPerHour * ratio.fructose) / parts
 
-  // Recommended combo: bottles carry the drink mix, gels cover whatever a
-  // moderate mix concentration doesn't.
-  const gelsPerHour = useGels
-    ? Math.max(0, Math.round((carbsPerHour - 40) / gelCarbs))
-    : 0
-  const drinkCarbsPerHour = carbsPerHour - gelsPerHour * gelCarbs
+  // How the hourly carbs are split between gels and the bottle:
+  // - combo: bottle carries ~40 g/h of mix, gels cover the rest
+  // - gels:  all carbs from gels, the bottle is plain water + electrolytes
+  // - diy:   everything dissolved in the bottle, no gels
+  let gelsPerHour: number
+  if (fuelSource === 'diy') {
+    gelsPerHour = 0
+  } else if (fuelSource === 'gels') {
+    gelsPerHour = Math.max(1, Math.round(carbsPerHour / gelCarbs))
+  } else {
+    gelsPerHour = Math.max(0, Math.round((carbsPerHour - 40) / gelCarbs))
+  }
+  const drinkCarbsPerHour =
+    fuelSource === 'gels' ? 0 : carbsPerHour - gelsPerHour * gelCarbs
   const drinkGlucosePerHour = (drinkCarbsPerHour * ratio.glucose) / parts
   const drinkFructosePerHour = (drinkCarbsPerHour * ratio.fructose) / parts
 
@@ -286,7 +295,7 @@ export function computePlan(input: PlanInput): RacePlan {
           input.triLegs[key].durationMin,
           input.triLegs[key].carbsPerHour,
           input.ratio,
-          input.useGels,
+          input.fuelSource,
           input.config,
         ),
       )
@@ -296,7 +305,7 @@ export function computePlan(input: PlanInput): RacePlan {
           input.durationMin,
           input.carbsPerHour,
           input.ratio,
-          input.useGels,
+          input.fuelSource,
           input.config,
         ),
       ]

@@ -25,8 +25,9 @@ no data storage — a race plan in 30 seconds, entirely on your device.
   separate duration + carb targets for bike and run, per-leg results,
   recipes and timeline
 - **Glucose:fructose ratio** — 2:1, 1:0.8, 1:1 presets or a custom ratio
-- **Fuel source switch** — gels + drink mix, or 100% DIY bottle mix
-  (with a concentration warning for very strong mixes)
+- **Fuel source switch** — gels + drink mix, gels only (plain water bottle,
+  no powder needed), or 100% DIY bottle mix (with a concentration warning
+  for very strong mixes)
 - **Hydration & sodium** — cool/mild/hot conditions scale fluid (500–1000
   ml/h) and sodium (400–900 mg/h); the DIY recipe shows exact salt grams
 - **Your gear** — configurable gel size (25/30/40 g) and bottle size

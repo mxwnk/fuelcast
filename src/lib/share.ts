@@ -1,4 +1,5 @@
 import type {
+  FuelSource,
   LegInput,
   LegKey,
   PlanInput,
@@ -17,6 +18,7 @@ import {
 
 const SPORT_IDS: Sport[] = ['triathlon', 'cycling', 'running']
 const TEMPERATURES: Temperature[] = ['cool', 'mild', 'hot']
+const FUEL_SOURCES: FuelSource[] = ['combo', 'gels', 'diy']
 
 export function buildShareUrl(input: PlanInput): string {
   const params = new URLSearchParams({ s: input.sport })
@@ -33,7 +35,7 @@ export function buildShareUrl(input: PlanInput): string {
   }
   params.set('r', `${input.ratio.glucose}:${input.ratio.fructose}`)
   // Advanced settings travel only when they differ from the defaults
-  if (!input.useGels) params.set('g', '0')
+  if (input.fuelSource !== 'combo') params.set('fs', input.fuelSource)
   const { config } = input
   if (config.temperature !== DEFAULT_CONFIG.temperature) {
     params.set('t', config.temperature)
@@ -50,7 +52,10 @@ export function buildShareUrl(input: PlanInput): string {
 /** True when a shared link carries settings only visible in advanced mode */
 export function hasAdvancedParams(search: string): boolean {
   const params = new URLSearchParams(search)
-  if (params.get('g') === '0') return true
+  // Legacy g=0 meant DIY-only
+  if (params.get('g') === '0' || (params.has('fs') && params.get('fs') !== 'combo')) {
+    return true
+  }
   if (params.has('t') || params.has('gel') || params.has('btl')) return true
   const r = params.get('r')
   return r !== null && r !== '1:0.8'
@@ -136,8 +141,15 @@ export function parseShareUrl(search: string): Partial<PlanInput> | null {
     result.triLegs = parseTriLegs(params, d, c)
   }
 
-  const g = params.get('g')
-  if (g === '0' || g === '1') result.useGels = g === '1'
+  const fs = params.get('fs') as FuelSource | null
+  if (fs && FUEL_SOURCES.includes(fs)) {
+    result.fuelSource = fs
+  } else {
+    // Legacy: g=0 meant DIY-only, g=1 meant gels + mix
+    const g = params.get('g')
+    if (g === '0') result.fuelSource = 'diy'
+    else if (g === '1') result.fuelSource = 'combo'
+  }
 
   const r = params.get('r')
   if (r) {

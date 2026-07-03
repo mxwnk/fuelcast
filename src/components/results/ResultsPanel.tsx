@@ -44,9 +44,9 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
       <div className="space-y-5 p-5">
         <PerHourSplit plan={plan} />
 
-        <ShoppingList plan={plan} useGels={input.useGels} advanced={advanced} />
+        <ShoppingList plan={plan} advanced={advanced} />
 
-        {input.useGels && <ProductsPerHour plan={plan} />}
+        {input.fuelSource !== 'diy' && <ProductsPerHour plan={plan} />}
 
         <div className={multi ? 'grid gap-3 sm:grid-cols-2' : ''}>
           {plan.legs.map((leg) => (

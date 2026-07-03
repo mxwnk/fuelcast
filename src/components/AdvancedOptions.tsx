@@ -57,8 +57,8 @@ export function AdvancedOptions({
           </Section>
           <Section step={startStep + 1} title={t('section.fuelSource')}>
             <FuelSourceControl
-              useGels={input.useGels}
-              onChange={(useGels) => onPatch({ useGels })}
+              value={input.fuelSource}
+              onChange={(fuelSource) => onPatch({ fuelSource })}
             />
           </Section>
           <Section step={startStep + 2} title={t('section.hydration')}>

@@ -22,10 +22,14 @@ export function ProductsPerHour({ plan }: { plan: RacePlan }) {
       )}
       <span className="data inline-flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 text-sm font-semibold">
         <Droplets className="size-3.5 text-accent" />
-        {t('results.drink', { ml: leg.fluidMlPerHour })}
-        <span className="font-normal text-muted">
-          {t('results.mix', { g: fmt(leg.drinkCarbsPerHour) })}
-        </span>
+        {leg.drinkCarbsPerHour < 0.5
+          ? t('results.water', { ml: leg.fluidMlPerHour })
+          : t('results.drink', { ml: leg.fluidMlPerHour })}
+        {leg.drinkCarbsPerHour >= 0.5 && (
+          <span className="font-normal text-muted">
+            {t('results.mix', { g: fmt(leg.drinkCarbsPerHour) })}
+          </span>
+        )}
       </span>
     </>
   )

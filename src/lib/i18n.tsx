@@ -57,8 +57,10 @@ const DICT = {
     'ratio.explainer':
       'Glucose and fructose use different gut transporters — combining them raises how many carbs you can absorb per hour.',
 
-    'fuel.gels.label': 'Gels + drink mix',
-    'fuel.gels.desc': 'Shop-bought gels carry part of the carbs, the bottle does the rest',
+    'fuel.combo.label': 'Gels + drink mix',
+    'fuel.combo.desc': 'Shop-bought gels carry part of the carbs, the bottle does the rest',
+    'fuel.gels.label': 'Gels only',
+    'fuel.gels.desc': 'All carbs from gels, the bottle is just water — no powder needed',
     'fuel.diy.label': 'DIY mix only',
     'fuel.diy.desc': 'Everything goes into the bottle — pure maltodextrin + fructose',
 
@@ -87,6 +89,7 @@ const DICT = {
     'results.each': '({g} g each)',
     'results.drink': '{ml} ml drink',
     'results.mix': '({g} g mix)',
+    'results.water': '{ml} ml water',
     'unit.gel': 'gel',
     'unit.gels': 'gels',
 
@@ -98,6 +101,8 @@ const DICT = {
     'shopping.salt': 'Table salt',
 
     'diy.title': 'DIY bottle mix',
+    'diy.waterTitle': 'Water bottle',
+    'diy.waterOnly': 'hydration only',
     'diy.legBottle': '{leg} bottle',
     'diy.topsUp': 'tops up the gels',
     'diy.malto': 'Maltodextrin (glucose)',
@@ -203,8 +208,10 @@ const DICT = {
     'ratio.explainer':
       'Glukose und Fruktose nutzen unterschiedliche Transporter im Darm — kombiniert kannst du mehr Carbs pro Stunde aufnehmen.',
 
-    'fuel.gels.label': 'Gels + Drink-Mix',
-    'fuel.gels.desc': 'Gekaufte Gels liefern einen Teil der Carbs, die Flasche den Rest',
+    'fuel.combo.label': 'Gels + Drink-Mix',
+    'fuel.combo.desc': 'Gekaufte Gels liefern einen Teil der Carbs, die Flasche den Rest',
+    'fuel.gels.label': 'Nur Gels',
+    'fuel.gels.desc': 'Alle Carbs aus Gels, die Flasche enthält nur Wasser — kein Pulver nötig',
     'fuel.diy.label': 'Nur DIY-Mix',
     'fuel.diy.desc': 'Alles kommt in die Flasche — pures Maltodextrin + Fruktose',
 
@@ -233,6 +240,7 @@ const DICT = {
     'results.each': '(je {g} g)',
     'results.drink': '{ml} ml Getränk',
     'results.mix': '({g} g Mix)',
+    'results.water': '{ml} ml Wasser',
     'unit.gel': 'Gel',
     'unit.gels': 'Gels',
 
@@ -244,6 +252,8 @@ const DICT = {
     'shopping.salt': 'Salz',
 
     'diy.title': 'DIY-Flaschenmix',
+    'diy.waterTitle': 'Wasserflasche',
+    'diy.waterOnly': 'nur Flüssigkeit',
     'diy.legBottle': '{leg}-Flasche',
     'diy.topsUp': 'ergänzt die Gels',
     'diy.malto': 'Maltodextrin (Glukose)',

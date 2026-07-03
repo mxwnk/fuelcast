@@ -5,7 +5,6 @@ import { makeFormatters } from './format'
 
 interface ShoppingListProps {
   plan: RacePlan
-  useGels: boolean
   advanced: boolean
 }
 
@@ -17,7 +16,7 @@ interface Item {
   sub?: string
 }
 
-export function ShoppingList({ plan, useGels, advanced }: ShoppingListProps) {
+export function ShoppingList({ plan, advanced }: ShoppingListProps) {
   const { t, locale } = useI18n()
   const { fmt, fmt1, liters } = makeFormatters(locale)
   const multi = plan.legs.length > 1
@@ -30,7 +29,7 @@ export function ShoppingList({ plan, useGels, advanced }: ShoppingListProps) {
     : undefined
 
   const items: Item[] = [
-    ...(useGels && plan.totalGels > 0
+    ...(plan.totalGels > 0
       ? [
           {
             key: 'gels',

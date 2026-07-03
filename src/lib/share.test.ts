@@ -9,7 +9,7 @@ const baseInput = (overrides: Partial<PlanInput> = {}): PlanInput => ({
   carbsPerHour: 90,
   triLegs: structuredClone(DEFAULT_TRI_LEGS),
   ratio: { glucose: 1, fructose: 0.8 },
-  useGels: true,
+  fuelSource: 'combo',
   config: { ...DEFAULT_CONFIG },
   ...overrides,
 })
@@ -43,7 +43,7 @@ describe('buildShareUrl', () => {
 
   it('only includes advanced params when they differ from defaults', () => {
     const plain = new URL(buildShareUrl(baseInput())).searchParams
-    expect(plain.has('g')).toBe(false)
+    expect(plain.has('fs')).toBe(false)
     expect(plain.has('t')).toBe(false)
     expect(plain.has('gel')).toBe(false)
     expect(plain.has('btl')).toBe(false)
@@ -51,12 +51,12 @@ describe('buildShareUrl', () => {
     const custom = new URL(
       buildShareUrl(
         baseInput({
-          useGels: false,
+          fuelSource: 'gels',
           config: { gelCarbs: 40, bottleMl: 500, temperature: 'hot' },
         }),
       ),
     ).searchParams
-    expect(custom.get('g')).toBe('0')
+    expect(custom.get('fs')).toBe('gels')
     expect(custom.get('t')).toBe('hot')
     expect(custom.get('gel')).toBe('40')
     expect(custom.get('btl')).toBe('500')
@@ -67,14 +67,14 @@ describe('parseShareUrl', () => {
   it('round-trips a full input', () => {
     const input = baseInput({
       sport: 'triathlon',
-      useGels: false,
+      fuelSource: 'gels',
       ratio: { glucose: 2, fructose: 1 },
       config: { gelCarbs: 30, bottleMl: 950, temperature: 'cool' },
     })
     input.triLegs.bike.carbsPerHour = 100
     const parsed = parseShareUrl(search(buildShareUrl(input)))
     expect(parsed?.sport).toBe('triathlon')
-    expect(parsed?.useGels).toBe(false)
+    expect(parsed?.fuelSource).toBe('gels')
     expect(parsed?.ratio).toEqual({ glucose: 2, fructose: 1 })
     expect(parsed?.config).toEqual({
       gelCarbs: 30,
@@ -111,6 +111,15 @@ describe('parseShareUrl', () => {
     expect(legs!.bike.carbsPerHour).toBe(80)
     expect(legs!.run.carbsPerHour).toBe(80)
   })
+
+  it('maps the legacy g=0 param to DIY-only', () => {
+    expect(parseShareUrl('?s=cycling&d=180&c=90&g=0')?.fuelSource).toBe('diy')
+  })
+
+  it('parses the fuel source param', () => {
+    expect(parseShareUrl('?s=cycling&fs=gels')?.fuelSource).toBe('gels')
+    expect(parseShareUrl('?s=cycling&fs=bogus')?.fuelSource).toBeUndefined()
+  })
 })
 
 describe('hasAdvancedParams', () => {
@@ -121,6 +130,8 @@ describe('hasAdvancedParams', () => {
 
   it('is true for non-default ratio, fuel source or config', () => {
     expect(hasAdvancedParams('?r=2:1')).toBe(true)
+    expect(hasAdvancedParams('?fs=gels')).toBe(true)
+    expect(hasAdvancedParams('?fs=diy')).toBe(true)
     expect(hasAdvancedParams('?g=0')).toBe(true)
     expect(hasAdvancedParams('?t=hot')).toBe(true)
     expect(hasAdvancedParams('?gel=40')).toBe(true)
