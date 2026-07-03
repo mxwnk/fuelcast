@@ -1,9 +1,10 @@
 {
   "ci": {
     "collect": {
-      "staticDistDir": "./dist",
+      "startServerCommand": "npx vite preview --port 9222",
+      "startServerReadyPattern": "Local:",
       "url": [
-        "http://localhost/index.html"
+        "http://localhost:9222/fuelcast/"
       ]
     },
     "assert": {
