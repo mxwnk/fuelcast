@@ -5,6 +5,8 @@ export type Lang = 'en' | 'de'
 const DICT = {
   en: {
     'app.tagline': 'Endurance fueling calc',
+    'nav.calculator': 'Calculator',
+    'nav.science': 'Science',
     'theme.toLight': 'Switch to light mode',
     'theme.toDark': 'Switch to dark mode',
     'lang.switch': 'Switch language',
@@ -149,9 +151,67 @@ const DICT = {
     'footer.disclaimer':
       'Not affiliated with any brand mentioned. Trademarks belong to their respective owners.',
     'footer.source': 'Source on GitHub',
+
+    'science.heroTitle': 'The Science',
+    'science.heroAccent': ' Behind FuelCast',
+    'science.heroDesc':
+      'Evidence-based sports nutrition — the research that powers our calculator.',
+    'science.dualTransport.title': 'The Dual Transport Model',
+    'science.dualTransport.subtitle': 'Why two sugars beat one',
+    'science.dualTransport.intro':
+      'Your small intestine absorbs carbohydrates through specialized protein channels called transporters. The key insight: glucose and fructose use completely different transporters.',
+    'science.dualTransport.sglt1.title': 'SGLT1 — The Glucose Channel',
+    'science.dualTransport.sglt1.items':
+      'Sodium-Glucose Linked Transporter 1|Located on the brush border of enterocytes|Absorbs glucose and glucose polymers (maltodextrin)|Co-transports Na+ and water (hydration bonus)|Saturates at approximately 60 g/h',
+    'science.dualTransport.glut5.title': 'GLUT5 — The Fructose Channel',
+    'science.dualTransport.glut5.items':
+      'Facilitative Glucose Transporter 5|Completely independent pathway from SGLT1|Absorbs fructose via facilitated diffusion|Provides an additional ~30–40 g/h capacity',
+    'science.dualTransport.insight':
+      'Since glucose and fructose use different transporters, consuming both simultaneously allows greater total absorption. Once SGLT1 saturates at ~60 g/h, additional glucose simply accumulates — causing GI distress. Adding fructose bypasses this bottleneck entirely.',
+    'science.dualTransport.chartCaption':
+      'Exogenous carbohydrate oxidation: glucose-only vs. dual transport (glucose + fructose). Based on Jeukendrup (2010), Smith et al. (2013).',
+    'science.oxidation.title': 'Oxidation Rates',
+    'science.oxidation.subtitle': 'How much can your body actually use?',
+    'science.oxidation.intro':
+      'Exogenous carbohydrate oxidation — the rate at which your body burns ingested carbs during exercise — has a well-documented ceiling depending on intestinal absorption capacity.',
+    'science.oxidation.performance':
+      'Currell & Jeukendrup (2008) showed glucose + fructose improved cycling time trial power by 8% over glucose alone (275 vs. 254 W).',
+    'science.oxidation.bodyweight':
+      'Body weight independent: a 60 kg runner and a 90 kg cyclist need the same intake rates. The gut, not the muscles, is the bottleneck.',
+    'science.ratio.title': 'The Optimal Ratio',
+    'science.ratio.subtitle': 'Glucose:Fructose — finding the sweet spot',
+    'science.ratio.classic':
+      'The classic 2:1 ratio delivers ~60 g glucose (saturating SGLT1) + ~30 g fructose (utilizing GLUT5) at 90 g/h. Most commercial products use this ratio.',
+    'science.ratio.modern':
+      'Newer research (Rowlands et al., 2015) suggests 1:0.8 may be equally effective. The exact ratio matters less than ensuring both transporters are recruited above 60 g/h.',
+    'science.timing.title': 'Timing & Dosing',
+    'science.timing.subtitle': 'When, how much, how often',
+    'science.timing.start':
+      'Start fueling within the first 15–30 minutes. Peak oxidation takes 75–90 minutes to reach maximum — starting early avoids a fuel gap.',
+    'science.timing.frequency':
+      'Little and often: every 15–20 minutes with smaller doses maintains stable blood glucose and reduces GI burden.',
+    'science.gut.title': 'Gut Training',
+    'science.gut.subtitle': 'Your gut is trainable',
+    'science.gut.intro':
+      'Cox et al. (2010) showed that 28 days of high-carb training increased exogenous oxidation rates. Intestinal transporters (SGLT1, GLUT5) are upregulated with consistent carbohydrate exposure.',
+    'science.gut.protocol':
+      'Start 4–6 weeks before race day. Begin at 40–50 g/h, increase by 10 g/h per week. Use the same products and concentrations you plan to race with.',
+    'science.gut.osmolality':
+      'Maltodextrin advantage: a 60 g/L maltodextrin solution has far lower osmolality than glucose — allowing high-concentration bottles that still empty quickly from the stomach.',
+    'science.practical.title': 'Practical Application',
+    'science.practical.subtitle': 'From science to race day',
+    'science.practical.formats':
+      'All formats (gels, drinks, solids) achieve similar oxidation rates when carb type and amount are matched (Pfeiffer et al., 2010). The choice is practical, not physiological.',
+    'science.practical.diy':
+      'DIY mixing with maltodextrin + fructose allows precise control over concentration and ratio at a fraction of the cost of commercial products.',
+    'science.practical.rules':
+      'Train your gut (4+ weeks)|Use multiple transportable carbs above 60 g/h|Start fueling within 15–30 minutes|Little and often — every 15–20 minutes|Keep bottles at 6–8% concentration|Nothing new on race day',
+    'science.references.title': 'Key References',
   },
   de: {
     'app.tagline': 'Ausdauer-Fueling-Rechner',
+    'nav.calculator': 'Rechner',
+    'nav.science': 'Wissenschaft',
     'theme.toLight': 'Zum hellen Modus wechseln',
     'theme.toDark': 'Zum dunklen Modus wechseln',
     'lang.switch': 'Switch language',
@@ -297,6 +357,62 @@ const DICT = {
     'footer.disclaimer':
       'Nicht mit den genannten Marken verbunden. Marken gehören ihren jeweiligen Inhabern.',
     'footer.source': 'Quellcode auf GitHub',
+
+    'science.heroTitle': 'Die Wissenschaft',
+    'science.heroAccent': ' hinter FuelCast',
+    'science.heroDesc':
+      'Evidenzbasierte Sporternährung — die Forschung, die unseren Rechner antreibt.',
+    'science.dualTransport.title': 'Das Dual-Transport-Modell',
+    'science.dualTransport.subtitle': 'Warum zwei Zucker besser sind als einer',
+    'science.dualTransport.intro':
+      'Dein Dünndarm absorbiert Kohlenhydrate über spezialisierte Proteinkanäle — sogenannte Transporter. Die zentrale Erkenntnis: Glucose und Fructose nutzen komplett unterschiedliche Transporter.',
+    'science.dualTransport.sglt1.title': 'SGLT1 — Der Glucose-Kanal',
+    'science.dualTransport.sglt1.items':
+      'Sodium-Glucose Linked Transporter 1|Sitzt auf der Bürstenmembran der Enterozyten|Absorbiert Glucose und Glucose-Polymere (Maltodextrin)|Co-transportiert Na+ und Wasser (Hydrations-Bonus)|Sättigt bei ca. 60 g/h',
+    'science.dualTransport.glut5.title': 'GLUT5 — Der Fructose-Kanal',
+    'science.dualTransport.glut5.items':
+      'Facilitative Glucose Transporter 5|Komplett unabhängiger Absorptionsweg|Absorbiert Fructose über erleichterte Diffusion|Bietet zusätzliche ~30–40 g/h Kapazität',
+    'science.dualTransport.insight':
+      'Da Glucose und Fructose unterschiedliche Transporter nutzen, ermöglicht der gleichzeitige Konsum eine höhere Gesamtabsorption. Sobald SGLT1 bei ~60 g/h sättigt, sammelt sich zusätzliche Glucose an — und verursacht GI-Beschwerden. Fructose umgeht diesen Flaschenhals vollständig.',
+    'science.dualTransport.chartCaption':
+      'Exogene Kohlenhydrat-Oxidation: nur Glucose vs. Dual-Transport (Glucose + Fructose). Basierend auf Jeukendrup (2010), Smith et al. (2013).',
+    'science.oxidation.title': 'Oxidationsraten',
+    'science.oxidation.subtitle': 'Wie viel kann dein Körper tatsächlich verwerten?',
+    'science.oxidation.intro':
+      'Exogene Kohlenhydrat-Oxidation — die Rate, mit der dein Körper aufgenommene Carbs verbrennt — hat eine gut dokumentierte Obergrenze, abhängig von der intestinalen Absorptionskapazität.',
+    'science.oxidation.performance':
+      'Currell & Jeukendrup (2008) zeigten: Glucose + Fructose verbesserte die Zeitfahr-Leistung um 8% gegenüber reiner Glucose (275 vs. 254 W).',
+    'science.oxidation.bodyweight':
+      'Körpergewicht-unabhängig: Ein 60 kg Läufer und ein 90 kg Radfahrer benötigen dieselben Zufuhrraten. Der Darm, nicht die Muskulatur, ist der Flaschenhals.',
+    'science.ratio.title': 'Das optimale Verhältnis',
+    'science.ratio.subtitle': 'Glucose:Fructose — den Sweet Spot finden',
+    'science.ratio.classic':
+      'Das klassische 2:1-Verhältnis liefert bei 90 g/h ~60 g Glucose (sättigt SGLT1) + ~30 g Fructose (nutzt GLUT5). Die meisten kommerziellen Produkte verwenden dieses Verhältnis.',
+    'science.ratio.modern':
+      'Neuere Forschung (Rowlands et al., 2015) deutet darauf hin, dass 1:0.8 ebenso effektiv sein könnte. Das exakte Verhältnis ist weniger kritisch als sicherzustellen, dass über 60 g/h beide Transporter rekrutiert werden.',
+    'science.timing.title': 'Timing & Dosierung',
+    'science.timing.subtitle': 'Wann, wie viel, wie oft',
+    'science.timing.start':
+      'Starte innerhalb der ersten 15–30 Minuten. Die Spitzen-Oxidation braucht 75–90 Minuten zum Maximum — früher Start vermeidet eine Kraftstofflücke.',
+    'science.timing.frequency':
+      'Wenig und oft: alle 15–20 Minuten in kleinen Dosen hält den Blutzucker stabil und reduziert die GI-Belastung.',
+    'science.gut.title': 'Darm-Training',
+    'science.gut.subtitle': 'Dein Darm ist trainierbar',
+    'science.gut.intro':
+      'Cox et al. (2010) zeigten, dass 28 Tage High-Carb-Training die exogenen Oxidationsraten steigerte. Intestinale Transporter (SGLT1, GLUT5) werden bei konstanter Kohlenhydrat-Exposition hochreguliert.',
+    'science.gut.protocol':
+      'Starte 4–6 Wochen vor dem Renntag. Beginne bei 40–50 g/h, steigere um 10 g/h pro Woche. Verwende dieselben Produkte und Konzentrationen wie im Wettkampf geplant.',
+    'science.gut.osmolality':
+      'Maltodextrin-Vorteil: Eine 60 g/L Maltodextrin-Lösung hat weit geringere Osmolalität als Glucose — ermöglicht hoch-konzentrierte Flaschen, die trotzdem schnell aus dem Magen entleert werden.',
+    'science.practical.title': 'Praktische Anwendung',
+    'science.practical.subtitle': 'Von der Wissenschaft zum Renntag',
+    'science.practical.formats':
+      'Alle Formate (Gels, Getränke, feste Nahrung) erreichen ähnliche Oxidationsraten bei gleichem Carb-Typ und gleicher Menge (Pfeiffer et al., 2010). Die Wahl ist praktisch, nicht physiologisch.',
+    'science.practical.diy':
+      'DIY-Mischen mit Maltodextrin + Fructose ermöglicht präzise Kontrolle über Konzentration und Verhältnis zu einem Bruchteil der Kosten kommerzieller Produkte.',
+    'science.practical.rules':
+      'Trainiere deinen Darm (4+ Wochen)|Nutze mehrere transportable KH über 60 g/h|Starte innerhalb von 15–30 Minuten|Wenig und oft — alle 15–20 Minuten|Flaschen bei 6–8% Konzentration halten|Nichts Neues am Renntag',
+    'science.references.title': 'Quellen',
   },
 } as const
 

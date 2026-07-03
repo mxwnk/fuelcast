@@ -1,15 +1,19 @@
 import { Moon, Sun, Zap } from 'lucide-react'
 import type { Lang } from '../lib/i18n'
+import type { View } from '../App'
 import { useI18n } from '../lib/i18n'
 
 interface HeaderProps {
   dark: boolean
+  view: View
   onToggleTheme: () => void
+  onChangeView: (view: View) => void
 }
 
 const LANGS: Lang[] = ['en', 'de']
+const VIEWS: View[] = ['calculator', 'science']
 
-export function Header({ dark, onToggleTheme }: HeaderProps) {
+export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps) {
   const { lang, setLang, t } = useI18n()
 
   return (
@@ -28,7 +32,33 @@ export function Header({ dark, onToggleTheme }: HeaderProps) {
             </p>
           </div>
         </div>
+
         <div className="flex items-center gap-2">
+          {/* View Toggle */}
+          <nav
+            role="tablist"
+            aria-label="Navigation"
+            className="flex h-9 items-center rounded-full border border-line bg-surface p-1"
+          >
+            {VIEWS.map((v) => (
+              <button
+                key={v}
+                type="button"
+                role="tab"
+                aria-selected={view === v}
+                onClick={() => onChangeView(v)}
+                className={`grid h-7 place-items-center rounded-full px-3 text-xs font-semibold transition-all duration-150 ${
+                  view === v
+                    ? 'bg-accent text-accent-ink'
+                    : 'text-muted hover:text-ink'
+                }`}
+              >
+                {t(`nav.${v}`)}
+              </button>
+            ))}
+          </nav>
+
+          {/* Language Toggle */}
           <div
             role="radiogroup"
             aria-label={t('lang.switch')}
@@ -51,6 +81,8 @@ export function Header({ dark, onToggleTheme }: HeaderProps) {
               </button>
             ))}
           </div>
+
+          {/* Theme Toggle */}
           <button
             type="button"
             onClick={onToggleTheme}
