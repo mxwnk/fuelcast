@@ -34,25 +34,22 @@ export function ProductsPerHour({ plan }: { plan: RacePlan }) {
     </>
   )
 
+  if (multi) {
+    return (
+      <div className="space-y-2">
+        {plan.legs.map((leg) => (
+          <div key={leg.key} className="flex flex-wrap items-center gap-2">
+            <span className="head w-16 text-[11px] text-muted">
+              {t(`leg.${leg.key}`)}
+            </span>
+            {chips(leg)}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
-    <div>
-      <p className="tick-label head text-xs text-muted">{t('results.shop')}</p>
-      {multi ? (
-        <div className="mt-2 space-y-2">
-          {plan.legs.map((leg) => (
-            <div key={leg.key} className="flex flex-wrap items-center gap-2">
-              <span className="head w-16 text-[11px] text-muted">
-                {t(`leg.${leg.key}`)}
-              </span>
-              {chips(leg)}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          {chips(plan.legs[0])}
-        </div>
-      )}
-    </div>
+    <div className="flex flex-wrap items-center gap-2">{chips(plan.legs[0])}</div>
   )
 }
