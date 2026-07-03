@@ -63,7 +63,7 @@ export function AssumptionsControl({ config, onChange }: AssumptionsControlProps
         value={config.gelCarbs}
         min={15}
         max={60}
-        step={5}
+        step={1}
         onChange={(gelCarbs) => onChange({ gelCarbs })}
       />
       <ChipRow
