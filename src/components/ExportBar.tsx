@@ -1,4 +1,4 @@
-import { Check, ImageDown, Link2 } from 'lucide-react'
+import { Check, ImageDown, Link2, Printer } from 'lucide-react'
 import { useState } from 'react'
 import { toPng } from 'html-to-image'
 import type { PlanInput } from '../lib/fueling'
@@ -51,6 +51,14 @@ export function ExportBar({ input, exportTarget }: ExportBarProps) {
       >
         <ImageDown className="size-4" />
         {exporting ? t('export.rendering') : t('export.png')}
+      </button>
+      <button
+        type="button"
+        onClick={() => window.print()}
+        className="head flex flex-1 items-center justify-center gap-2 rounded-xl border border-line-strong bg-surface px-4 py-3 text-xs text-ink transition-all duration-150 hover:border-accent active:scale-[0.98]"
+      >
+        <Printer className="size-4" />
+        {t('export.print')}
       </button>
       <button
         type="button"

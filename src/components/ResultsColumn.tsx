@@ -23,7 +23,7 @@ export function ResultsColumn({ input, plan, advanced }: ResultsColumnProps) {
         <ResultsPanel input={input} plan={plan} advanced={advanced} />
         <Timeline plan={plan} />
       </div>
-      <div className="rise" style={{ animationDelay: '480ms' }}>
+      <div className="rise" style={{ animationDelay: '480ms' }} data-print="hide">
         <ExportBar input={input} exportTarget={exportRef} />
       </div>
     </div>

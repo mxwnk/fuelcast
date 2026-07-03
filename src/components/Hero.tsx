@@ -11,7 +11,7 @@ const PROMISES = [
 export function Hero() {
   const { t } = useI18n()
   return (
-    <div className="rise mb-8">
+    <div className="rise mb-8" data-print="hide">
       <h1 className="head text-3xl leading-none tracking-tight sm:text-4xl">
         {t('hero.title.plain')}
         <span className="text-accent">{t('hero.title.accent')}</span>

@@ -226,3 +226,77 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---- Print stylesheet: plan + timeline on one page ---- */
+@media print {
+  html {
+    font-size: 11pt;
+    background: white;
+  }
+
+  body {
+    background: white;
+    color: #1a1a1a;
+  }
+
+  /* Hide non-essential elements */
+  header,
+  footer,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  /* Remove layout constraints */
+  main {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Collapse the grid so results fill the page */
+  .grid {
+    display: block !important;
+  }
+
+  /* Force light-mode print-friendly colors */
+  :root,
+  .dark {
+    --bg: white;
+    --surface: white;
+    --raised: #f5f5f5;
+    --line: #d4d4d4;
+    --line-strong: #a3a3a3;
+    --ink: #1a1a1a;
+    --muted: #525252;
+    --accent: #c43d00;
+    --accent-ink: white;
+    --gluc: #c43d00;
+    --fruc: #a07000;
+    --track: #e5e5e5;
+  }
+
+  /* Remove decorative elements */
+  .hazard {
+    display: none !important;
+  }
+
+  .rise {
+    animation: none !important;
+  }
+
+  /* Ensure backgrounds print */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Keep sections together */
+  .space-y-4 > * {
+    break-inside: avoid;
+  }
+
+  /* Page setup */
+  @page {
+    margin: 12mm;
+    size: A4 portrait;
+  }
+}
