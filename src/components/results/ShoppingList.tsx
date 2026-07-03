@@ -28,6 +28,9 @@ export function ShoppingList({ plan, advanced }: ShoppingListProps) {
         .join(' · ')
     : undefined
 
+  const gelTotalCarbs = plan.totalGels * plan.legs[0].gelCarbs
+  const gelSub = gelBreakdown ?? `${fmt(gelTotalCarbs)} g carbs`
+
   const items: Item[] = [
     ...(plan.totalGels > 0
       ? [
@@ -36,7 +39,7 @@ export function ShoppingList({ plan, advanced }: ShoppingListProps) {
             icon: <Zap className="size-4" />,
             value: `${plan.totalGels}×`,
             label: t('shopping.gels', { g: plan.legs[0].gelCarbs }),
-            sub: gelBreakdown,
+            sub: gelSub,
           },
         ]
       : []),
