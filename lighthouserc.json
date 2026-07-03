@@ -3,7 +3,7 @@
     "collect": {
       "staticDistDir": "./dist",
       "url": [
-        "http://localhost/fuelcast/"
+        "http://localhost/index.html"
       ]
     },
     "assert": {
