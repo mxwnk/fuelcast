@@ -1,6 +1,6 @@
 import { Heart } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import type { PlanConfig } from '../lib/fueling'
-import type { View } from '../App'
 import { useI18n } from '../lib/i18n'
 
 const REPO_URL = 'https://github.com/mxwnk/fuelcast'
@@ -15,11 +15,10 @@ function GithubMark({ className }: { className?: string }) {
 
 interface FooterProps {
   config: PlanConfig
-  onNavigate: (view: View) => void
 }
 
-export function Footer({ config, onNavigate }: FooterProps) {
-  const { t } = useI18n()
+export function Footer({ config }: FooterProps) {
+  const { lang, t } = useI18n()
   return (
     <footer
       className="rise mt-14 border-t border-line pt-5 text-xs leading-relaxed text-muted"
@@ -45,16 +44,12 @@ export function Footer({ config, onNavigate }: FooterProps) {
             <GithubMark className="size-4" />
             {t('footer.source')}
           </a>
-          <button
-            type="button"
-            onClick={() => {
-              onNavigate('imprint')
-              window.scrollTo({ top: 0 })
-            }}
+          <Link
+            to={`/${lang}/imprint`}
             className="font-semibold text-muted underline-offset-2 hover:text-accent hover:underline"
           >
             {t('footer.imprint')}
-          </button>
+          </Link>
         </div>
         <p className="flex items-center gap-1.5">
           <span>© {new Date().getFullYear()} FuelCast · Made with</span>

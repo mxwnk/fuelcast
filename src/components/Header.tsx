@@ -1,29 +1,24 @@
 import { Moon, Sun, Zap } from 'lucide-react'
-import type { Lang } from '../lib/i18n'
-import type { View } from '../App'
-import { useI18n } from '../lib/i18n'
+import { Link, NavLink } from 'react-router-dom'
+import { LANGS, useI18n } from '../lib/i18n'
 
 interface HeaderProps {
   dark: boolean
-  view: View
   onToggleTheme: () => void
-  onChangeView: (view: View) => void
 }
 
-const LANGS: Lang[] = ['en', 'de']
-const NAV_VIEWS = ['calculator', 'science'] as const
+const NAV_ITEMS = [
+  { key: 'nav.calculator', path: '' },
+  { key: 'nav.science', path: 'science' },
+] as const
 
-export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps) {
+export function Header({ dark, onToggleTheme }: HeaderProps) {
   const { lang, setLang, t } = useI18n()
 
   return (
     <header className="rise sticky top-0 z-20 border-b border-line bg-bg/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <button
-          type="button"
-          onClick={() => onChangeView('calculator')}
-          className="flex items-center gap-2.5"
-        >
+        <Link to={`/${lang}`} className="flex items-center gap-2.5">
           <span className="grid size-8 place-items-center rounded-lg bg-ink text-accent dark:bg-raised">
             <Zap className="size-4.5 fill-accent" strokeWidth={1.5} />
           </span>
@@ -35,34 +30,31 @@ export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps)
               {t('app.tagline')}
             </p>
           </div>
-        </button>
+        </Link>
 
         <div className="flex items-center gap-2">
-          {/* View Toggle */}
+          {/* Page navigation */}
           <nav
-            role="tablist"
             aria-label="Navigation"
             className="flex h-9 items-center rounded-full border border-line bg-surface p-1"
           >
-            {NAV_VIEWS.map((v) => (
-              <button
-                key={v}
-                type="button"
-                role="tab"
-                aria-selected={view === v}
-                onClick={() => onChangeView(v)}
-                className={`grid h-7 place-items-center rounded-full px-3 text-xs font-semibold transition-all duration-150 ${
-                  view === v
-                    ? 'bg-accent text-accent-ink'
-                    : 'text-muted hover:text-ink'
-                }`}
+            {NAV_ITEMS.map(({ key, path }) => (
+              <NavLink
+                key={key}
+                to={path ? `/${lang}/${path}` : `/${lang}`}
+                end={path === ''}
+                className={({ isActive }) =>
+                  `grid h-7 place-items-center rounded-full px-3 text-xs font-semibold transition-all duration-150 ${
+                    isActive ? 'bg-accent text-accent-ink' : 'text-muted hover:text-ink'
+                  }`
+                }
               >
-                {t(`nav.${v}`)}
-              </button>
+                {t(key)}
+              </NavLink>
             ))}
           </nav>
 
-          {/* Language Toggle */}
+          {/* Language toggle */}
           <div
             role="radiogroup"
             aria-label={t('lang.switch')}
@@ -76,9 +68,7 @@ export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps)
                 aria-checked={lang === code}
                 onClick={() => setLang(code)}
                 className={`data grid h-7 place-items-center rounded-full px-2 text-xs font-bold uppercase transition-all duration-150 ${
-                  lang === code
-                    ? 'bg-accent text-accent-ink'
-                    : 'text-muted hover:text-ink'
+                  lang === code ? 'bg-accent text-accent-ink' : 'text-muted hover:text-ink'
                 }`}
               >
                 {code}
@@ -86,7 +76,7 @@ export function Header({ dark, view, onToggleTheme, onChangeView }: HeaderProps)
             ))}
           </div>
 
-          {/* Theme Toggle */}
+          {/* Theme toggle */}
           <button
             type="button"
             onClick={onToggleTheme}

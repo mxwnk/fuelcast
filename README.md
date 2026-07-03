@@ -41,7 +41,10 @@ no data storage — a race plan in 30 seconds, entirely on your device.
   (all state lives in query params: `?s=cycling&d=240&c=90&r=1:0.8`)
 - **Dark / light mode** — follows the system preference, manual toggle persists
 - **English & German** — language switcher in the header, defaults to the
-  browser language, persists locally
+  browser language; the language is part of the URL (`/en/…`, `/de/…`)
+- **Routing** — every page has its own URL (`/de/science`, `/en/imprint`)
+  via react-router; deep links work on GitHub Pages through a 404.html
+  fallback
 - **PWA** — installable to the home screen and fully offline-capable
   (all assets precached via service worker)
 

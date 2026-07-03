@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 
 export type Lang = "en" | "de";
 
@@ -453,17 +453,32 @@ interface I18nValue {
 
 const I18nContext = createContext<I18nValue | null>(null);
 
-function detectLang(): Lang {
+/** Default for URLs without a language prefix: saved preference, then browser language */
+export function detectLang(): Lang {
   const stored = localStorage.getItem("fuelcast-lang");
-  if (stored === "de" || stored === "en") return stored;
+  if (isLang(stored ?? undefined)) return stored as Lang;
   return navigator.language.toLowerCase().startsWith("de") ? "de" : "en";
 }
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>(detectLang);
+export function persistLang(lang: Lang): void {
+  localStorage.setItem("fuelcast-lang", lang);
+}
 
+export const LANGS: Lang[] = ["en", "de"];
+
+export function isLang(value: string | undefined): value is Lang {
+  return value === "en" || value === "de";
+}
+
+interface I18nProviderProps {
+  /** Language is owned by the URL — the provider only renders it */
+  lang: Lang;
+  onChangeLang: (lang: Lang) => void;
+  children: React.ReactNode;
+}
+
+export function I18nProvider({ lang, onChangeLang, children }: I18nProviderProps) {
   useEffect(() => {
-    localStorage.setItem("fuelcast-lang", lang);
     document.documentElement.lang = lang;
   }, [lang]);
 
@@ -480,7 +495,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const locale = lang === "de" ? "de-DE" : "en-US";
 
   return (
-    <I18nContext.Provider value={{ lang, setLang, t, locale }}>
+    <I18nContext.Provider value={{ lang, setLang: onChangeLang, t, locale }}>
       {children}
     </I18nContext.Provider>
   );
