@@ -7,6 +7,7 @@ import { makeFormatters } from './format'
 import { PerHourSplit } from './PerHourSplit'
 import { PlanMessages } from './PlanMessages'
 import { ProductsPerHour } from './ProductsPerHour'
+import { ShoppingList } from './ShoppingList'
 
 interface ResultsPanelProps {
   input: PlanInput
@@ -16,23 +17,15 @@ interface ResultsPanelProps {
 
 export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
   const { t, locale } = useI18n()
-  const { fmt, liters } = makeFormatters(locale)
+  const { fmt } = makeFormatters(locale)
   const multi = plan.legs.length > 1
   const single = plan.legs[0]
-
-  const gelUnit = (n: number) => t(n === 1 ? 'unit.gel' : 'unit.gels')
-  const bottleUnit = (n: number) => t(n === 1 ? 'unit.bottle' : 'unit.bottles')
 
   const headerDetail = multi
     ? plan.legs
         .map((leg) => `${t(`leg.${leg.key}`)} ${leg.carbsPerHour} g/h`)
         .join(' · ')
     : `${single.carbsPerHour} g/h`
-
-  const wholeRaceItems = [
-    ...(plan.totalGels > 0 ? [`${plan.totalGels} ${gelUnit(plan.totalGels)}`] : []),
-    `${plan.totalBottles} ${bottleUnit(plan.totalBottles)} (${liters(plan.totalFluidL)} L)`,
-  ].join(' + ')
 
   return (
     <div className="overflow-hidden rounded-2xl border border-line bg-surface">
@@ -51,7 +44,17 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
       <div className="space-y-5 p-5">
         <PerHourSplit plan={plan} />
 
-        {/* Race totals */}
+        <ShoppingList plan={plan} useGels={input.useGels} advanced={advanced} />
+
+        {input.useGels && <ProductsPerHour plan={plan} />}
+
+        <div className={multi ? 'grid gap-3 sm:grid-cols-2' : ''}>
+          {plan.legs.map((leg) => (
+            <DiyRecipe key={leg.key} leg={leg} showLegName={multi} advanced={advanced} />
+          ))}
+        </div>
+
+        {/* Intake totals */}
         <div className="grid grid-cols-3 gap-2">
           {[
             { label: t('results.totalCarbs'), value: `${fmt(plan.totalCarbs)} g` },
@@ -73,29 +76,6 @@ export function ResultsPanel({ input, plan, advanced }: ResultsPanelProps) {
             </div>
           ))}
         </div>
-
-        {input.useGels && (
-          <div>
-            <ProductsPerHour plan={plan} />
-            <p className="mt-2 text-xs text-muted">
-              {t('results.wholeRace', { items: wholeRaceItems })}
-            </p>
-          </div>
-        )}
-
-        <div className={multi ? 'grid gap-3 sm:grid-cols-2' : ''}>
-          {plan.legs.map((leg) => (
-            <DiyRecipe key={leg.key} leg={leg} showLegName={multi} advanced={advanced} />
-          ))}
-        </div>
-        <p className="-mt-2 text-xs text-muted">
-          {t('diy.wholeRace', {
-            malto: fmt(plan.totalMaltodextrin),
-            fruc: fmt(plan.totalFructosePowder),
-            bottles: `${plan.totalBottles} ${bottleUnit(plan.totalBottles)}`,
-            liters: liters(plan.totalFluidL),
-          })}
-        </p>
 
         <PlanMessages plan={plan} advanced={advanced} />
       </div>

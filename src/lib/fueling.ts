@@ -99,6 +99,7 @@ export interface RacePlan {
   totalBottles: number
   totalMaltodextrin: number
   totalFructosePowder: number
+  totalSaltG: number
   warnings: PlanMessage[]
   hints: PlanMessage[]
 }
@@ -357,6 +358,7 @@ export function computePlan(input: PlanInput): RacePlan {
     totalBottles: sum((l) => l.totalBottles),
     totalMaltodextrin: sum((l) => l.drinkGlucosePerHour * l.hours),
     totalFructosePowder: sum((l) => l.drinkFructosePerHour * l.hours),
+    totalSaltG: sum((l) => (l.sodiumMgPerHour * 2.5 * l.hours) / 1000),
     warnings,
     hints,
   }

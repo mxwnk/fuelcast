@@ -105,6 +105,12 @@ describe('race totals', () => {
     expect(plan.totalFluidL).toBeCloseTo(2.25)
   })
 
+  it('sums total salt from the hourly sodium target', () => {
+    const plan = computePlan(baseInput({ durationMin: 180 }))
+    // 600 mg/h sodium × 3 h × 2.5 (salt is ~40% sodium)
+    expect(plan.totalSaltG).toBeCloseTo(4.5)
+  })
+
   it('sums DIY powder from the drink portion only', () => {
     const plan = computePlan(baseInput({ durationMin: 180 }))
     // 40 g/h drink × 3 h = 120 g split 1:0.8

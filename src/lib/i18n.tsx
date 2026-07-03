@@ -87,11 +87,15 @@ const DICT = {
     'results.each': '({g} g each)',
     'results.drink': '{ml} ml drink',
     'results.mix': '({g} g mix)',
-    'results.wholeRace': '≈ {items} for the whole race.',
     'unit.gel': 'gel',
     'unit.gels': 'gels',
-    'unit.bottle': 'bottle',
-    'unit.bottles': 'bottles',
+
+    'shopping.title': 'Shopping list · whole race',
+    'shopping.gels': 'Gels ({g} g)',
+    'shopping.bottles': 'Bottles',
+    'shopping.malto': 'Maltodextrin',
+    'shopping.fructose': 'Fructose',
+    'shopping.salt': 'Table salt',
 
     'diy.title': 'DIY bottle mix',
     'diy.legBottle': '{leg} bottle',
@@ -102,8 +106,6 @@ const DICT = {
     'diy.salt': 'Salt (sodium)',
     'diy.pinch': 'Pinch of salt + squeeze of citrus',
     'diy.toTaste': 'to taste',
-    'diy.wholeRace':
-      'Whole race: {malto} g maltodextrin + {fruc} g fructose across {bottles} ({liters} L).',
 
     'warn.glucoseCap':
       'Glucose absorption tops out around 60 g/h — this plan delivers {g} g/h. Consider shifting to a 1:0.8 ratio.',
@@ -228,11 +230,15 @@ const DICT = {
     'results.each': '(je {g} g)',
     'results.drink': '{ml} ml Getränk',
     'results.mix': '({g} g Mix)',
-    'results.wholeRace': '≈ {items} fürs ganze Rennen.',
     'unit.gel': 'Gel',
     'unit.gels': 'Gels',
-    'unit.bottle': 'Flasche',
-    'unit.bottles': 'Flaschen',
+
+    'shopping.title': 'Einkaufsliste · ganzes Rennen',
+    'shopping.gels': 'Gels ({g} g)',
+    'shopping.bottles': 'Flaschen',
+    'shopping.malto': 'Maltodextrin',
+    'shopping.fructose': 'Fruktose',
+    'shopping.salt': 'Salz',
 
     'diy.title': 'DIY-Flaschenmix',
     'diy.legBottle': '{leg}-Flasche',
@@ -243,8 +249,6 @@ const DICT = {
     'diy.salt': 'Salz (Natrium)',
     'diy.pinch': 'Prise Salz + Spritzer Zitrone',
     'diy.toTaste': 'nach Geschmack',
-    'diy.wholeRace':
-      'Ganzes Rennen: {malto} g Maltodextrin + {fruc} g Fruktose verteilt auf {bottles} ({liters} L).',
 
     'warn.glucoseCap':
       'Die Glukoseaufnahme ist bei ~60 g/h gedeckelt — dieser Plan liefert {g} g/h. Erwäge ein 1:0.8-Verhältnis.',
