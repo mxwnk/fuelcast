@@ -144,6 +144,11 @@ const DICT = {
       'Assumptions: 1 gel ≈ {gel} g carbs · 1 bottle = {bottle} ml · maltodextrin counts as glucose. FuelCast is a planning aid, not medical or nutritional advice — always test your fueling strategy in training.',
     'footer.privacy':
       'Free, open and stateless: no account, no tracking, no data leaves your device — your plan lives entirely in the URL.',
+    'footer.disclaimer':
+      'Not affiliated with any brand mentioned. Trademarks belong to their respective owners.',
+    'footer.source': 'Source on GitHub',
+    'footer.madeBy': 'Made with',
+    'footer.by': 'by',
   },
   de: {
     'app.tagline': 'Ausdauer-Fueling-Rechner',
@@ -287,6 +292,11 @@ const DICT = {
       'Annahmen: 1 Gel ≈ {gel} g Carbs · 1 Flasche = {bottle} ml · Maltodextrin zählt als Glukose. FuelCast ist eine Planungshilfe, keine medizinische oder Ernährungsberatung — teste deine Strategie immer im Training.',
     'footer.privacy':
       'Kostenlos, offen und zustandslos: kein Konto, kein Tracking, keine Daten verlassen dein Gerät — dein Plan lebt komplett in der URL.',
+    'footer.disclaimer':
+      'Nicht mit den genannten Marken verbunden. Marken gehören ihren jeweiligen Inhabern.',
+    'footer.source': 'Quellcode auf GitHub',
+    'footer.madeBy': 'Gemacht mit',
+    'footer.by': 'von',
   },
 } as const
 
