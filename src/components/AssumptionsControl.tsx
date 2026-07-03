@@ -16,9 +16,9 @@ interface ChipRowProps {
 
 function ChipRow({ label, unit, options, value, min, max, step, onChange }: ChipRowProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2">
+    <div>
       <span className="head text-[11px] text-muted">{label}</span>
-      <div className="flex items-center gap-1.5">
+      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
         {options.map((option) => (
           <button
             key={option}
