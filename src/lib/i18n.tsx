@@ -135,6 +135,7 @@ const DICT = {
       "Sweat rates vary ~8\u00d7 between individuals and sodium concentration ~15\u00d7. Consider a sweat test for personalized targets, especially for events over 3 hours.",
     "hint.medicalDisclaimer":
       "Not suitable for children. If you have cardiac, renal, or blood pressure conditions, consult your physician before following any hydration or fueling plan.",
+    "hints.toggle": "{count} hints & safety notes",
 
     "timeline.title": "Race timeline",
     "timeline.subtitle.multi": "Hourly pattern per discipline",
@@ -376,6 +377,7 @@ const DICT = {
       "Schweißraten variieren ~8\u00d7 zwischen Personen, Natrium-Konzentration ~15\u00d7. Erwäge einen Schweißtest für individuelle Ziele, besonders bei Events über 3 Stunden.",
     "hint.medicalDisclaimer":
       "Nicht geeignet für Kinder. Bei Herz-, Nieren- oder Blutdruckerkrankungen vor Anwendung eines Hydrations- oder Fueling-Plans ärztlichen Rat einholen.",
+    "hints.toggle": "{count} Hinweise & Sicherheitsinfos",
 
     "timeline.title": "Renn-Timeline",
     "timeline.subtitle.multi": "Stundenmuster pro Disziplin",
