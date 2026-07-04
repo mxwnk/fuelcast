@@ -77,7 +77,7 @@ const DICT = {
     "temp.adj.mild": "mild",
     "temp.adj.hot": "hot",
     "hydration.targets":
-      "Targets ~{fluid} ml fluid and ~{sodium} mg sodium per hour — the DIY recipe includes the matching salt amount.",
+      "Estimates ~{fluid} ml fluid and ~{sodium} mg sodium per hour (individual sweat rates vary widely). The DIY recipe includes the matching salt amount.",
 
     "gear.gel": "Carbs per gel",
     "gear.bottle": "Bottle size",
@@ -118,7 +118,7 @@ const DICT = {
     "warn.glucoseCap":
       "Glucose absorption tops out around 60 g/h — this plan delivers {g} g/h. Consider shifting to a 1:0.8 ratio.",
     "warn.concentration":
-      "{g} g in one {ml} ml bottle is a ~{pct}% solution — that's hard on many stomachs. Chase it with plain water on course.",
+      "{g} g in one {ml} ml bottle is a ~{pct}% solution — above 8% slows gastric emptying. Drink plain water alongside or split carbs across more bottles.",
     "warn.gutTraining":
       "Intakes of 90 g/h and above need gut training — practice this in workouts before race day.",
     "warn.runOverBike":
@@ -135,6 +135,10 @@ const DICT = {
       "Sweat rates vary ~8\u00d7 between individuals and sodium concentration ~15\u00d7. Consider a sweat test for personalized targets, especially for events over 3 hours.",
     "hint.medicalDisclaimer":
       "Not suitable for children. If you have cardiac, renal, or blood pressure conditions, consult your physician before following any hydration or fueling plan.",
+    "hint.bodyWeight":
+      "High carb targets (80+ g/h) are based on research with trained male athletes. Lighter athletes or those new to fueling may want to start at the lower end and build up.",
+    "hint.saltPalatability":
+      "Hot conditions increase the salt concentration in your bottle. If the taste becomes unpalatable, drink more plain water alongside or split into smaller, more frequent bottles.",
     "hints.toggle": "{count} hints & safety notes",
 
     "timeline.title": "Race timeline",
@@ -319,7 +323,7 @@ const DICT = {
     "temp.adj.mild": "milde",
     "temp.adj.hot": "heiße",
     "hydration.targets":
-      "Zielt auf ~{fluid} ml Flüssigkeit und ~{sodium} mg Natrium pro Stunde — das DIY-Rezept enthält die passende Salzmenge.",
+      "Schätzt ~{fluid} ml Flüssigkeit und ~{sodium} mg Natrium pro Stunde (individuelle Schweißraten variieren stark). Das DIY-Rezept enthält die passende Salzmenge.",
 
     "gear.gel": "Carbs pro Gel",
     "gear.bottle": "Flaschengröße",
@@ -360,7 +364,7 @@ const DICT = {
     "warn.glucoseCap":
       "Die Glukoseaufnahme ist bei ~60 g/h gedeckelt — dieser Plan liefert {g} g/h. Erwäge ein 1:0.8-Verhältnis.",
     "warn.concentration":
-      "{g} g in einer {ml}-ml-Flasche ergeben eine ~{pct}%-Lösung — das vertragen viele Mägen schlecht. Trink unterwegs klares Wasser dazu.",
+      "{g} g in einer {ml}-ml-Flasche ergeben eine ~{pct}%-Lösung — über 8% verlangsamt die Magenentleerung. Trink klares Wasser dazu oder verteile die Carbs auf mehr Flaschen.",
     "warn.gutTraining":
       "Mengen ab 90 g/h erfordern Gut-Training — übe das in Trainingseinheiten vor dem Wettkampf.",
     "warn.runOverBike":
@@ -377,6 +381,10 @@ const DICT = {
       "Schweißraten variieren ~8\u00d7 zwischen Personen, Natrium-Konzentration ~15\u00d7. Erwäge einen Schweißtest für individuelle Ziele, besonders bei Events über 3 Stunden.",
     "hint.medicalDisclaimer":
       "Nicht geeignet für Kinder. Bei Herz-, Nieren- oder Blutdruckerkrankungen vor Anwendung eines Hydrations- oder Fueling-Plans ärztlichen Rat einholen.",
+    "hint.bodyWeight":
+      "Hohe Carb-Ziele (80+ g/h) basieren auf Studien mit trainierten männlichen Athleten. Leichtere Athleten oder Einsteiger sollten am unteren Ende beginnen und sich steigern.",
+    "hint.saltPalatability":
+      "Heiße Bedingungen erhöhen die Salzkonzentration in deiner Flasche. Wenn der Geschmack unangenehm wird, trink mehr klares Wasser dazu oder nutze kleinere, häufigere Flaschen.",
     "hints.toggle": "{count} Hinweise & Sicherheitsinfos",
 
     "timeline.title": "Renn-Timeline",

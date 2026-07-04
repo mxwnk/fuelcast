@@ -326,7 +326,7 @@ export function computePlan(input: PlanInput): RacePlan {
         params: { g: Math.round(leg.glucosePerHour) },
       })
     }
-    if (leg.bottleCarbs / leg.bottleMl > 0.12) {
+    if (leg.bottleCarbs / leg.bottleMl > 0.08) {
       warnings.push({
         key: 'warn.concentration',
         leg: legRef,
@@ -354,6 +354,12 @@ export function computePlan(input: PlanInput): RacePlan {
     hints.push({ key: 'hint.short' })
   } else if (legs.some((l) => l.carbsPerHour >= 70)) {
     hints.push({ key: 'hint.firstHour' })
+  }
+  if (legs.some((l) => l.carbsPerHour >= 80)) {
+    hints.push({ key: 'hint.bodyWeight' })
+  }
+  if (input.config.temperature === 'hot') {
+    hints.push({ key: 'hint.saltPalatability' })
   }
 
   return {
