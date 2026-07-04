@@ -42,7 +42,7 @@ export function Header({ dark, onToggleTheme }: HeaderProps) {
               <NavLink
                 key={key}
                 to={path ? `/${lang}/${path}` : `/${lang}`}
-                end={path === ''}
+                end
                 className={({ isActive }) =>
                   `grid h-7 place-items-center rounded-full px-3 text-xs font-semibold transition-all duration-150 ${
                     isActive ? 'bg-accent text-accent-ink' : 'text-muted hover:text-ink'
