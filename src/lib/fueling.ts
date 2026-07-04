@@ -215,16 +215,28 @@ function computeLeg(
   const fructosePerHour = (carbsPerHour * ratio.fructose) / parts
 
   // How the hourly carbs are split between gels and the bottle:
-  // - combo: bottle carries ~40 g/h of mix, gels cover the rest
-  // - gels:  all carbs from gels, the bottle is plain water + electrolytes
+  // - combo: bottle carries ~40 g/h of mix, gels cover the rest (per-hour is
+  //   exact because the bottle absorbs the remainder)
+  // - gels:  all carbs from gels — size the TOTAL to the target and round once.
+  //   Rounding gels per hour and multiplying overshoots badly: 60 g/h with
+  //   40 g gels is 1.5 gels/h, which would round to 2/h = 480 g over 6 h vs a
+  //   360 g target. Deriving the total (round(360/40)=9) keeps it on target.
   // - diy:   everything dissolved in the bottle, no gels
   let gelsPerHour: number
+  let gelIntervalMin: number | null
+  let totalGels: number
   if (fuelSource === 'diy') {
     gelsPerHour = 0
+    gelIntervalMin = null
+    totalGels = 0
   } else if (fuelSource === 'gels') {
-    gelsPerHour = Math.max(1, Math.round(carbsPerHour / gelCarbs))
+    totalGels = Math.max(1, Math.round((carbsPerHour * hours) / gelCarbs))
+    gelIntervalMin = Math.max(5, Math.round(durationMin / totalGels))
+    gelsPerHour = 60 / gelIntervalMin
   } else {
     gelsPerHour = Math.max(0, Math.round((carbsPerHour - 40) / gelCarbs))
+    gelIntervalMin = gelsPerHour > 0 ? Math.round(60 / gelsPerHour) : null
+    totalGels = Math.ceil(gelsPerHour * hours)
   }
   const drinkCarbsPerHour =
     fuelSource === 'gels' ? 0 : carbsPerHour - gelsPerHour * gelCarbs
@@ -238,7 +250,6 @@ function computeLeg(
   // Table salt is ~40% sodium by weight
   const bottleSaltG = (sodiumMgPerHour / bottlesPerHour) * SODIUM_TO_SALT_FACTOR / 1000
 
-  const gelIntervalMin = gelsPerHour > 0 ? Math.round(60 / gelsPerHour) : null
   const sipIntervalMin = 15
   const sipMl = Math.round(fluidMlPerHour / (60 / sipIntervalMin) / 10) * 10
 
@@ -246,11 +257,16 @@ function computeLeg(
   for (let m = sipIntervalMin; m <= 60; m += sipIntervalMin) {
     hourlyEvents.push({ minute: m, kind: 'sip' })
   }
-  if (gelsPerHour > 0 && gelIntervalMin) {
-    // Center gels within the hour: 1 gel → :30, 2 → :15/:45, 3 → :10/:30/:50
-    for (let i = 0; i < gelsPerHour; i++) {
-      const m = Math.round(gelIntervalMin / 2 + i * gelIntervalMin)
+  // Place gels by interval within a representative hour. This reproduces the
+  // old centred layout for combo (1 gel → :30, 2 → :15/:45, 3 → :10/:30/:50)
+  // and handles gels-only intervals that don't divide evenly into 60.
+  if (gelIntervalMin) {
+    for (let m = Math.round(gelIntervalMin / 2); m < 60; m += gelIntervalMin) {
       hourlyEvents.push({ minute: m, kind: 'gel' })
+    }
+    // Interval longer than an hour: still show one gel so the rail isn't empty
+    if (!hourlyEvents.some((e) => e.kind === 'gel')) {
+      hourlyEvents.push({ minute: 30, kind: 'gel' })
     }
   }
   hourlyEvents.sort((a, b) => a.minute - b.minute)
@@ -282,7 +298,7 @@ function computeLeg(
     sipIntervalMin,
     sipMl,
     hourlyEvents,
-    totalGels: Math.ceil(gelsPerHour * hours),
+    totalGels,
     totalFluidL: (fluidMlPerHour * hours) / 1000,
     totalBottles: Math.ceil((fluidMlPerHour * hours) / bottleMl),
   }

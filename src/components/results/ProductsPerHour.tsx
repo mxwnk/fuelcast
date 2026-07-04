@@ -7,8 +7,13 @@ export function ProductsPerHour({ plan }: { plan: RacePlan }) {
   const multi = plan.legs.length > 1
   const gelUnit = (n: number) => t(n === 1 ? 'unit.gel' : 'unit.gels')
 
-  // Only the gels are worth listing here — the bottle is covered by the recipe below
-  if (!plan.legs.some((leg) => leg.gelsPerHour > 0)) return null
+  // Show a per-hour gel count only when the rate is a whole number. A
+  // fractional rate (e.g. gels-only at 1.5/h) can't be stated cleanly per hour
+  // — those gels are covered by the timeline cadence ("every 40 min") and the
+  // whole-race shopping list instead.
+  const hasGelChip = (leg: LegPlan) =>
+    Number.isInteger(leg.gelsPerHour) && leg.gelsPerHour > 0
+  if (!plan.legs.some(hasGelChip)) return null
 
   const gelChip = (leg: LegPlan) => (
     <span className="data inline-flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 text-sm font-semibold">
@@ -24,7 +29,7 @@ export function ProductsPerHour({ plan }: { plan: RacePlan }) {
     return (
       <div className="space-y-2">
         {plan.legs
-          .filter((leg) => leg.gelsPerHour > 0)
+          .filter(hasGelChip)
           .map((leg) => (
             <div key={leg.key} className="flex flex-wrap items-center gap-2">
               <span className="head w-16 text-[11px] text-muted">

@@ -58,19 +58,35 @@ describe('product combo', () => {
   })
 
   it('gets all carbs from gels with a water-only bottle in gels-only mode', () => {
-    const leg = computePlan(baseInput({ fuelSource: 'gels' })).legs[0]
-    // 90 g/h ÷ 25 g gel → ~4 gels, bottle carries no carbs
-    expect(leg.gelsPerHour).toBe(4)
+    const plan = computePlan(baseInput({ fuelSource: 'gels' }))
+    const leg = plan.legs[0]
+    // 90 g/h × 3 h = 270 g ÷ 25 g gel → 11 gels, bottle carries no carbs
+    expect(plan.totalGels).toBe(11)
     expect(leg.drinkCarbsPerHour).toBe(0)
     expect(leg.bottleGlucose).toBe(0)
     expect(leg.fluidMlPerHour).toBe(750)
   })
 
+  it('sizes gels to the total target without per-hour rounding overshoot', () => {
+    // Regression: 60 g/h × 6 h = 360 g with 40 g gels must be 9 gels (360 g),
+    // not round(1.5)=2/h × 6 h = 12 gels (480 g).
+    const plan = computePlan(
+      baseInput({
+        fuelSource: 'gels',
+        carbsPerHour: 60,
+        durationMin: 360,
+        config: { ...DEFAULT_CONFIG, gelCarbs: 40 },
+      }),
+    )
+    expect(plan.totalGels).toBe(9)
+    expect(plan.totalGels * 40).toBe(360)
+  })
+
   it('always suggests at least one gel in gels-only mode', () => {
-    const leg = computePlan(
-      baseInput({ fuelSource: 'gels', carbsPerHour: 30 }),
-    ).legs[0]
-    expect(leg.gelsPerHour).toBe(1)
+    const plan = computePlan(
+      baseInput({ fuelSource: 'gels', carbsPerHour: 30, durationMin: 30 }),
+    )
+    expect(plan.totalGels).toBeGreaterThanOrEqual(1)
   })
 
   it('splits the drink portion by the ratio', () => {
@@ -134,8 +150,8 @@ describe('race totals', () => {
     expect(plan.totalFructosePowder).toBeCloseTo((120 * 0.8) / 1.8)
   })
 
-  it('should compute total gels consistent with gels-per-hour display', () => {
-    // 90 g/h with 60 g gels over 5 h: gelsPerHour = round(1.5) = 2, total = ceil(2*5) = 10
+  it('rounds gels-only total to the target, not per-hour', () => {
+    // 90 g/h × 5 h = 450 g with 60 g gels → round(7.5) = 8 gels (was 2/h × 5 = 10)
     const plan = computePlan(
       baseInput({
         fuelSource: 'gels',
@@ -144,8 +160,7 @@ describe('race totals', () => {
         config: { ...DEFAULT_CONFIG, gelCarbs: 60 },
       }),
     )
-    expect(plan.legs[0].gelsPerHour).toBe(2)
-    expect(plan.totalGels).toBe(10)
+    expect(plan.totalGels).toBe(8)
   })
 
   it('should compute correct total gels in combo mode with large gels', () => {
@@ -162,8 +177,8 @@ describe('race totals', () => {
     expect(plan.totalGels).toBe(3)
   })
 
-  it('should align total gels with gels-per-hour times duration', () => {
-    // 60 g/h gels-only with 40 g gels over 4 h: gelsPerHour = round(1.5) = 2, total = ceil(2*4) = 8
+  it('keeps gels-only total on the carb target', () => {
+    // 60 g/h × 4 h = 240 g with 40 g gels → exactly 6 gels (was round(1.5)=2/h × 4 = 8)
     const plan = computePlan(
       baseInput({
         fuelSource: 'gels',
@@ -172,8 +187,8 @@ describe('race totals', () => {
         config: { ...DEFAULT_CONFIG, gelCarbs: 40 },
       }),
     )
-    expect(plan.legs[0].gelsPerHour).toBe(2)
-    expect(plan.totalGels).toBe(8)
+    expect(plan.totalGels).toBe(6)
+    expect(plan.totalGels * 40).toBe(240)
   })
 })
 
