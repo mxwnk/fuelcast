@@ -1,10 +1,10 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npx vite preview --port 9222",
-      "startServerReadyPattern": "Local:",
+      "startServerCommand": "npx serve dist -l 9222 -s",
+      "startServerReadyPattern": "Accepting connections",
       "url": [
-        "http://localhost:9222/"
+        "http://localhost:9222/en/"
       ]
     },
     "assert": {
