@@ -48,9 +48,9 @@ export function PlanMessages({ plan, advanced }: PlanMessagesProps) {
         </p>
       ))}
 
-      {/* Collapsible hints & safety notes */}
+      {/* Collapsible hints & safety notes — hidden in print and image export */}
       {collapsibleCount > 0 && (
-        <div className="rounded-lg border border-line bg-raised">
+        <div className="rounded-lg border border-line bg-raised" data-print="hide">
           <button
             type="button"
             onClick={() => setExpanded(!expanded)}

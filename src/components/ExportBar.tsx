@@ -21,11 +21,15 @@ export function ExportBar({ input, exportTarget }: ExportBarProps) {
     setExporting(true)
     try {
       const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg')
+      // Hide hints/safety notes during export
+      const hiddenElements = node.querySelectorAll<HTMLElement>('[data-print="hide"]')
+      hiddenElements.forEach((el) => { el.style.display = 'none' })
       const dataUrl = await toPng(node, {
         pixelRatio: 2,
         backgroundColor: bg.trim() || undefined,
         style: { margin: '0' },
       })
+      hiddenElements.forEach((el) => { el.style.display = '' })
       const link = document.createElement('a')
       link.download = 'fuelcast-plan.png'
       link.href = dataUrl
