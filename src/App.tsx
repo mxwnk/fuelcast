@@ -16,6 +16,7 @@ import { KnowHowPage } from './components/pages/KnowHowPage'
 import { PrivacyPage } from './components/pages/PrivacyPage'
 import { useAdvancedMode } from './hooks/useAdvancedMode'
 import { usePlanInput } from './hooks/usePlanInput'
+import { useSeo } from './hooks/useSeo'
 import { useTheme } from './hooks/useTheme'
 import type { Lang } from './lib/i18n'
 import { detectLang, I18nProvider, isLang, persistLang } from './lib/i18n'
@@ -44,6 +45,8 @@ function LangLayout() {
   const advancedState = useAdvancedMode()
 
   const validLang = isLang(lang)
+
+  useSeo(validLang ? lang : 'en', location.pathname)
 
   // New page → start at the top (query-param changes don't navigate)
   useEffect(() => {
