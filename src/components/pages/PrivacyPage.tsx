@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useI18n } from '../../lib/i18n'
 
-const IMPRINT_DATA = 'eyJuYW1lIjoiTWF4aW1pbGlhbiBXaW5rZWxtYW5uIiwiYWRkcmVzcyI6IkZyYW5rZW5hbGJzdHIuIDgsIDkxMDU2IEVybGFuZ2VuIiwiZW1haWwiOiJpbmZvQGZ1ZWxjYXN0LnJ1biJ9'
+const IMPRINT_DATA = 'eyJuYW1lIjoiTWF4aW1pbGlhbiBXaW5rZWxtYW5uIiwiYWRkcmVzcyI6IkZyYW5rZW5hbGJzdHIuIDgsIDkxMDU2IEVybGFuZ2VuIiwiZW1haWwiOiJoZWxsb0BmdWVsY2FzdC5ydW4ifQ=='
 
 function decodeEmail(): string {
   const info = JSON.parse(atob(IMPRINT_DATA)) as { email: string }
