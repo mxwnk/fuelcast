@@ -4,7 +4,7 @@
       "startServerCommand": "npx vite preview --port 9222",
       "startServerReadyPattern": "Local:",
       "url": [
-        "http://localhost:9222/fuelcast/"
+        "http://localhost:9222/"
       ]
     },
     "assert": {

@@ -5,8 +5,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Served from https://mxwnk.github.io/fuelcast/ on GitHub Pages
-  base: '/fuelcast/',
+  // Custom domain: fuelcast.run (root path)
+  // Falls back to /fuelcast/ for mxwnk.github.io without custom domain
+  base: process.env.CUSTOM_DOMAIN ? '/' : '/fuelcast/',
   plugins: [
     react(),
     tailwindcss(),
