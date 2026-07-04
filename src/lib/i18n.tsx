@@ -128,7 +128,13 @@ const DICT = {
     "hint.firstHour":
       "Ease into it: stay at the lower end of your target for the first hour while your gut settles into race rhythm.",
     "hint.hydration":
-      "Hydration assumes {temp} conditions (~{fluid} ml + ~{sodium} mg sodium per hour). Open “{advanced}” to tune for heat.",
+      "Hydration assumes {temp} conditions (~{fluid} ml + ~{sodium} mg sodium per hour). Open \u201c{advanced}\u201d to tune for heat.",
+    "hint.drinkToThirst":
+      "Drink to thirst, not to a schedule. Fluid targets here are rough estimates \u2014 overdrinking can cause dangerous hyponatremia. Let thirst guide you.",
+    "hint.individualVariation":
+      "Sweat rates vary ~8\u00d7 between individuals and sodium concentration ~15\u00d7. Consider a sweat test for personalized targets, especially for events over 3 hours.",
+    "hint.medicalDisclaimer":
+      "Not suitable for children. If you have cardiac, renal, or blood pressure conditions, consult your physician before following any hydration or fueling plan.",
 
     "timeline.title": "Race timeline",
     "timeline.subtitle.multi": "Hourly pattern per discipline",
@@ -363,7 +369,13 @@ const DICT = {
     "hint.firstHour":
       "Lass es ruhig angehen: Bleib in der ersten Stunde am unteren Ende deines Ziels, bis sich dein Magen an den Rennrhythmus gewöhnt hat.",
     "hint.hydration":
-      "Hydration nimmt {temp} Bedingungen an (~{fluid} ml + ~{sodium} mg Natrium pro Stunde). Öffne „{advanced}“, um z. B. Hitze einzustellen.",
+      "Hydration nimmt {temp} Bedingungen an (~{fluid} ml + ~{sodium} mg Natrium pro Stunde). Öffne \u201e{advanced}\u201c, um z. B. Hitze einzustellen.",
+    "hint.drinkToThirst":
+      "Trinke nach Durst, nicht nach Zeitplan. Die Flüssigkeitsziele hier sind grobe Schätzungen \u2014 übermäßiges Trinken kann gefährliche Hyponatriämie verursachen. Lass dein Durstgefühl entscheiden.",
+    "hint.individualVariation":
+      "Schweißraten variieren ~8\u00d7 zwischen Personen, Natrium-Konzentration ~15\u00d7. Erwäge einen Schweißtest für individuelle Ziele, besonders bei Events über 3 Stunden.",
+    "hint.medicalDisclaimer":
+      "Nicht geeignet für Kinder. Bei Herz-, Nieren- oder Blutdruckerkrankungen vor Anwendung eines Hydrations- oder Fueling-Plans ärztlichen Rat einholen.",
 
     "timeline.title": "Renn-Timeline",
     "timeline.subtitle.multi": "Stundenmuster pro Disziplin",

@@ -1,4 +1,4 @@
-import { AlertTriangle, Info } from 'lucide-react'
+import { AlertTriangle, Info, ShieldAlert } from 'lucide-react'
 import type { RacePlan } from '../../lib/fueling'
 import { HYDRATION } from '../../lib/fueling'
 import { useI18n } from '../../lib/i18n'
@@ -25,6 +25,12 @@ export function PlanMessages({ plan, advanced }: PlanMessagesProps) {
     )
   }
 
+  const safetyHints = [
+    t('hint.drinkToThirst'),
+    t('hint.individualVariation'),
+    t('hint.medicalDisclaimer'),
+  ]
+
   return (
     <>
       {plan.warnings.map((warning) => (
@@ -42,6 +48,15 @@ export function PlanMessages({ plan, advanced }: PlanMessagesProps) {
           className="flex items-start gap-2 rounded-lg border border-line bg-raised px-3 py-2.5 text-xs leading-relaxed text-muted"
         >
           <Info className="mt-0.5 size-3.5 shrink-0 text-accent" />
+          {hint}
+        </p>
+      ))}
+      {safetyHints.map((hint) => (
+        <p
+          key={hint}
+          className="flex items-start gap-2 rounded-lg border border-line bg-raised px-3 py-2.5 text-xs leading-relaxed text-muted"
+        >
+          <ShieldAlert className="mt-0.5 size-3.5 shrink-0 text-muted" />
           {hint}
         </p>
       ))}
