@@ -160,7 +160,7 @@ const REFERENCES: Reference[] = [
   },
 ]
 
-export function SciencePage() {
+export function BackgroundPage() {
   const { t, locale } = useI18n()
 
   return (

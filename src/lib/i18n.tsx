@@ -6,7 +6,7 @@ const DICT = {
   en: {
     "app.tagline": "Endurance fueling calc",
     "nav.calculator": "Calculator",
-    "nav.science": "Science",
+    "nav.background": "Background",
     "theme.toLight": "Switch to light mode",
     "theme.toDark": "Switch to dark mode",
     "lang.switch": "Switch language",
@@ -222,7 +222,7 @@ const DICT = {
   de: {
     "app.tagline": "Ausdauer-Fueling-Rechner",
     "nav.calculator": "Rechner",
-    "nav.science": "Wissenschaft",
+    "nav.background": "Hintergrund",
     "theme.toLight": "Zum hellen Modus wechseln",
     "theme.toDark": "Zum dunklen Modus wechseln",
     "lang.switch": "Switch language",

@@ -9,7 +9,7 @@ interface HeaderProps {
 
 const NAV_ITEMS = [
   { key: 'nav.calculator', path: '' },
-  { key: 'nav.science', path: 'science' },
+  { key: 'nav.background', path: 'background' },
 ] as const
 
 export function Header({ dark, onToggleTheme }: HeaderProps) {
