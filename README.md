@@ -71,10 +71,19 @@ npm run icons     # regenerate PWA icons from the bolt mark
 (Netlify, Vercel, GitHub Pages, S3, …). No server or environment
 configuration required.
 
-## Assumptions baked into the plan
+## Science & safety
 
-- 1 gel ≈ 25 g carbs, 1 bottle = 750 ml, maltodextrin counts as glucose
-- Glucose absorption is capped around 60 g/h — the app warns when a plan
-  exceeds it and suggests shifting toward a 1:0.8 ratio
-- FuelCast is a planning aid, not medical or nutritional advice — always
-  rehearse race fueling in training
+- **Dual transport model** — glucose (SGLT1) + fructose (GLUT5) for absorption
+  rates above 60 g/h; the app warns when glucose alone exceeds the ceiling
+- **Concentration warning** — flags bottle mixes above 8% (gastric emptying
+  threshold) and suggests splitting or adding plain water
+- **Hydration as estimates** — fluid/sodium targets are rough starting points;
+  individual sweat rates vary widely, and the app explicitly warns to drink
+  to thirst, not to a fixed schedule
+- **Safety hints** — body weight caveat, salt palatability at high temps,
+  medical disclaimer (not for children, cardiac/renal/BP patients)
+- **Know-how page** — evidence-based explainers with linked references
+  (Jeukendrup 2014, Cox 2010, Smith 2013, etc.)
+
+FuelCast is a planning aid, not medical or nutritional advice — always
+rehearse race fueling in training.
