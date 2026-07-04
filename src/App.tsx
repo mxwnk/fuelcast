@@ -10,9 +10,9 @@ import {
 } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { BackgroundPage } from './components/pages/BackgroundPage'
 import { CalculatorPage } from './components/pages/CalculatorPage'
 import { ImprintPage } from './components/pages/ImprintPage'
+import { KnowHowPage } from './components/pages/KnowHowPage'
 import { useAdvancedMode } from './hooks/useAdvancedMode'
 import { usePlanInput } from './hooks/usePlanInput'
 import { useTheme } from './hooks/useTheme'
@@ -77,9 +77,10 @@ export default function App() {
     <Routes>
       <Route path="/:lang" element={<LangLayout />}>
         <Route index element={<CalculatorPage />} />
-        <Route path="background" element={<BackgroundPage />} />
-        {/* Old links to the former science page keep working */}
-        <Route path="science" element={<Navigate to="../background" replace />} />
+        <Route path="know-how" element={<KnowHowPage />} />
+        {/* Former names of the know-how page keep working */}
+        <Route path="science" element={<Navigate to="../know-how" replace />} />
+        <Route path="background" element={<Navigate to="../know-how" replace />} />
         <Route path="imprint" element={<ImprintPage />} />
         <Route path="*" element={<Navigate to="." replace />} />
       </Route>

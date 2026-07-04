@@ -160,7 +160,7 @@ const REFERENCES: Reference[] = [
   },
 ]
 
-export function BackgroundPage() {
+export function KnowHowPage() {
   const { t, locale } = useI18n()
 
   return (
