@@ -1,6 +1,5 @@
 import { Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import type { PlanConfig } from '../lib/fueling'
 import { useI18n } from '../lib/i18n'
 
 const REPO_URL = 'https://github.com/mxwnk/fuelcast'
@@ -13,24 +12,14 @@ function GithubMark({ className }: { className?: string }) {
   )
 }
 
-interface FooterProps {
-  config: PlanConfig
-}
-
-export function Footer({ config }: FooterProps) {
+export function Footer() {
   const { lang, t } = useI18n()
   return (
     <footer
       className="rise mt-14 border-t border-line pt-5 text-xs leading-relaxed text-muted"
       style={{ animationDelay: '560ms' }}
     >
-      <p>
-        {t('footer.assumptions', {
-          gel: config.gelCarbs,
-          bottle: config.bottleMl,
-        })}
-      </p>
-      <p className="mt-2">{t('footer.privacy')}</p>
+      <p>{t('footer.privacy')}</p>
       <p className="mt-2">{t('footer.disclaimer')}</p>
 
       <div className="mt-5 flex flex-wrap items-center justify-center gap-3 border-t border-line pt-4 sm:justify-between">

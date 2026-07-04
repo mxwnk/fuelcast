@@ -66,7 +66,7 @@ function LangLayout() {
         <Header dark={dark} onToggleTheme={toggle} />
         <main className="mx-auto max-w-6xl px-4 pb-20 pt-8 sm:pt-10">
           <Outlet context={context} />
-          <Footer config={planState.input.config} />
+          <Footer />
         </main>
       </div>
     </I18nProvider>
