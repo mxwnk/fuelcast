@@ -228,6 +228,9 @@ export function KnowHowPage() {
         <p className="text-sm text-muted italic">
           {t('science.oxidation.bodyweight')}
         </p>
+        <p className="text-sm text-muted italic">
+          {t('science.oxidation.diminishing')}
+        </p>
       </ScienceSection>
 
       {/* 3. Ratio */}

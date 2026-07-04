@@ -122,7 +122,7 @@ const DICT = {
     "warn.gutTraining":
       "Intakes of 90 g/h and above need gut training — practice this in workouts before race day.",
     "warn.runOverBike":
-      "Your run target is higher than your bike target — most athletes fuel hardest on the bike, where the gut tolerates more, and back off on the run.",
+      "Your run target is higher than your bike target — most athletes front-load fueling on the bike where eating is mechanically easier, then reduce on the run to avoid GI issues from impact.",
     "hint.short":
       "Racing under ~90 minutes? Topped-up glycogen stores cover most of it — one bottle of mix or a single gel is plenty.",
     "hint.firstHour":
@@ -219,6 +219,8 @@ const DICT = {
       "Currell & Jeukendrup (2008) showed glucose + fructose improved cycling time trial power by 8% over glucose alone (275 vs. 254 W).",
     "science.oxidation.bodyweight":
       "Body weight independent: a 60 kg runner and a 90 kg cyclist need the same intake rates. The gut, not the muscles, is the bottleneck.",
+    "science.oxidation.diminishing":
+      "Diminishing returns above 90 g/h: oxidation efficiency drops from ~86% to ~76% at 120 g/h with no additional glycogen sparing. The extra carbs require dedicated gut training and offer sub-proportional benefit.",
     "science.ratio.title": "The Optimal Ratio",
     "science.ratio.subtitle": "Glucose:Fructose — finding the sweet spot",
     "science.ratio.classic":
@@ -368,7 +370,7 @@ const DICT = {
     "warn.gutTraining":
       "Mengen ab 90 g/h erfordern Gut-Training — übe das in Trainingseinheiten vor dem Wettkampf.",
     "warn.runOverBike":
-      "Dein Lauf-Ziel liegt über dem Rad-Ziel — die meisten Athleten fueln am härtesten auf dem Rad, wo der Magen mehr verträgt, und reduzieren beim Laufen.",
+      "Dein Lauf-Ziel liegt über dem Rad-Ziel — die meisten Athleten fueln stärker auf dem Rad, wo Essen mechanisch einfacher ist, und reduzieren beim Laufen um GI-Probleme durch den Aufprall zu vermeiden.",
     "hint.short":
       "Rennen unter ~90 Minuten? Volle Glykogenspeicher decken das meiste ab — eine Flasche Mix oder ein einzelnes Gel reicht.",
     "hint.firstHour":
@@ -466,6 +468,8 @@ const DICT = {
       "Currell & Jeukendrup (2008) zeigten: Glucose + Fructose verbesserte die Zeitfahr-Leistung um 8% gegenüber reiner Glucose (275 vs. 254 W).",
     "science.oxidation.bodyweight":
       "Körpergewicht-unabhängig: Ein 60 kg Läufer und ein 90 kg Radfahrer benötigen dieselben Zufuhrraten. Der Darm, nicht die Muskulatur, ist der Flaschenhals.",
+    "science.oxidation.diminishing":
+      "Abnehmender Ertrag über 90 g/h: Die Oxidationseffizienz sinkt von ~86% auf ~76% bei 120 g/h ohne zusätzliches Glykogen-Sparing. Die extra Carbs erfordern gezieltes Darm-Training und bieten unterproportionalen Nutzen.",
     "science.ratio.title": "Das optimale Verhältnis",
     "science.ratio.subtitle": "Glucose:Fructose — den Sweet Spot finden",
     "science.ratio.classic":

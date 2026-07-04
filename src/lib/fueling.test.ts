@@ -134,8 +134,8 @@ describe('race totals', () => {
     expect(plan.totalFructosePowder).toBeCloseTo((120 * 0.8) / 1.8)
   })
 
-  it('should not overcount gels when gel size causes rounding up per hour', () => {
-    // 90 g/h with 60 g gels over 5 h: need 450 g total → 8 gels (ceil(7.5))
+  it('should compute total gels consistent with gels-per-hour display', () => {
+    // 90 g/h with 60 g gels over 5 h: gelsPerHour = round(1.5) = 2, total = ceil(2*5) = 10
     const plan = computePlan(
       baseInput({
         fuelSource: 'gels',
@@ -144,13 +144,12 @@ describe('race totals', () => {
         config: { ...DEFAULT_CONFIG, gelCarbs: 60 },
       }),
     )
-    expect(plan.totalGels).toBe(8)
-    expect(plan.totalGels * 60).toBeLessThanOrEqual(plan.totalCarbs + 60)
+    expect(plan.legs[0].gelsPerHour).toBe(2)
+    expect(plan.totalGels).toBe(10)
   })
 
   it('should compute correct total gels in combo mode with large gels', () => {
-    // 90 g/h combo with 60 g gels over 3 h: gelsPerHour=1, drinkCarbs=30
-    // total gel carbs = (90-30)*3 = 180 → ceil(180/60) = 3
+    // 90 g/h combo with 60 g gels over 3 h: gelsPerHour=1, total = ceil(1*3) = 3
     const plan = computePlan(
       baseInput({
         fuelSource: 'combo',
@@ -163,9 +162,8 @@ describe('race totals', () => {
     expect(plan.totalGels).toBe(3)
   })
 
-  it('should not produce more gel carbs than total carbs target', () => {
-    // Edge case: 60 g/h gels-only with 40 g gels over 4 h
-    // gelsPerHour = round(60/40) = 2, totalCarbs = 240, totalGels = ceil(240/40) = 6
+  it('should align total gels with gels-per-hour times duration', () => {
+    // 60 g/h gels-only with 40 g gels over 4 h: gelsPerHour = round(1.5) = 2, total = ceil(2*4) = 8
     const plan = computePlan(
       baseInput({
         fuelSource: 'gels',
@@ -174,9 +172,8 @@ describe('race totals', () => {
         config: { ...DEFAULT_CONFIG, gelCarbs: 40 },
       }),
     )
-    expect(plan.totalGels).toBe(6)
-    expect(plan.totalGels * 40).toBeGreaterThanOrEqual(plan.totalCarbs)
-    expect(plan.totalGels * 40).toBeLessThanOrEqual(plan.totalCarbs + 40)
+    expect(plan.legs[0].gelsPerHour).toBe(2)
+    expect(plan.totalGels).toBe(8)
   })
 })
 
