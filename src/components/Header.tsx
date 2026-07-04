@@ -41,7 +41,7 @@ export function Header({ dark, onToggleTheme }: HeaderProps) {
             {NAV_ITEMS.map(({ key, path }) => (
               <NavLink
                 key={key}
-                to={path ? `/${lang}/${path}` : `/${lang}`}
+                to={path ? `/${lang}/${path}` : `/${lang}/`}
                 end
                 className={({ isActive }) =>
                   `grid h-7 place-items-center rounded-full px-3 text-xs font-semibold transition-all duration-150 ${
