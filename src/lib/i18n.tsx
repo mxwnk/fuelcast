@@ -167,7 +167,7 @@ const DICT = {
       "Free, open and stateless: no account, no tracking, no data leaves your device — your plan lives entirely in the URL.",
     "footer.disclaimer":
       "Not affiliated with any brand mentioned. Trademarks belong to their respective owners.",
-    "footer.source": "Source on GitHub",
+    "footer.source": "Source code",
     "footer.imprint": "Imprint",
 
     "imprint.updated": "Last updated: July 2026",
@@ -416,7 +416,7 @@ const DICT = {
       "Kostenlos, offen und zustandslos: kein Konto, kein Tracking, keine Daten verlassen dein Gerät — dein Plan lebt komplett in der URL.",
     "footer.disclaimer":
       "Nicht mit den genannten Marken verbunden. Marken gehören ihren jeweiligen Inhabern.",
-    "footer.source": "Quellcode auf GitHub",
+    "footer.source": "Quellcode",
     "footer.imprint": "Impressum",
 
     "imprint.updated": "Stand: Juli 2026",
