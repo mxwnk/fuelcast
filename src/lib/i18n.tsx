@@ -157,9 +157,6 @@ const DICT = {
       "Not affiliated with any brand mentioned. Trademarks belong to their respective owners.",
     "footer.source": "Source on GitHub",
     "footer.imprint": "Imprint",
-    "footer.imprint.name": "YOUR NAME HERE",
-    "footer.imprint.address": "YOUR ADDRESS HERE",
-    "footer.imprint.contact": "Email: YOUR EMAIL HERE",
     "footer.imprint.liability": "Liability for content",
     "footer.imprint.liabilityText": "The contents of this site have been created with the utmost care. However, no guarantee can be given for the correctness, completeness, or timeliness of the content. This site is a planning tool and does not constitute medical or nutritional advice.",
 
@@ -373,9 +370,6 @@ const DICT = {
       "Nicht mit den genannten Marken verbunden. Marken gehören ihren jeweiligen Inhabern.",
     "footer.source": "Quellcode auf GitHub",
     "footer.imprint": "Impressum",
-    "footer.imprint.name": "DEIN NAME HIER",
-    "footer.imprint.address": "DEINE ADRESSE HIER",
-    "footer.imprint.contact": "E-Mail: DEINE EMAIL HIER",
     "footer.imprint.liability": "Haftung für Inhalte",
     "footer.imprint.liabilityText": "Die Inhalte dieser Seite wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden. Diese Seite ist ein Planungswerkzeug und stellt keine medizinische oder ernährungswissenschaftliche Beratung dar.",
 
