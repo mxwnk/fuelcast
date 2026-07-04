@@ -114,6 +114,9 @@ export const DEFAULT_CONFIG: PlanConfig = {
 export const GEL_SIZES = [25, 30, 40]
 export const BOTTLE_SIZES = [500, 750, 950]
 
+/** Table salt (NaCl) is ~40% sodium by weight → factor 2.5 to convert sodium mg to salt mg */
+const SODIUM_TO_SALT_FACTOR = 2.5
+
 export const HYDRATION: Record<
   Temperature,
   { range: string; fluidMlPerHour: number; sodiumMgPerHour: number }
@@ -233,7 +236,7 @@ function computeLeg(
   const bottleGlucose = drinkGlucosePerHour / bottlesPerHour
   const bottleFructose = drinkFructosePerHour / bottlesPerHour
   // Table salt is ~40% sodium by weight
-  const bottleSaltG = (sodiumMgPerHour / bottlesPerHour) * 2.5 / 1000
+  const bottleSaltG = (sodiumMgPerHour / bottlesPerHour) * SODIUM_TO_SALT_FACTOR / 1000
 
   const gelIntervalMin = gelsPerHour > 0 ? Math.round(60 / gelsPerHour) : null
   const sipIntervalMin = 15
@@ -373,7 +376,7 @@ export function computePlan(input: PlanInput): RacePlan {
     totalBottles: sum((l) => l.totalBottles),
     totalMaltodextrin: sum((l) => l.drinkGlucosePerHour * l.hours),
     totalFructosePowder: sum((l) => l.drinkFructosePerHour * l.hours),
-    totalSaltG: sum((l) => (l.sodiumMgPerHour * 2.5 * l.hours) / 1000),
+    totalSaltG: sum((l) => (l.sodiumMgPerHour * SODIUM_TO_SALT_FACTOR * l.hours) / 1000),
     warnings,
     hints,
   }

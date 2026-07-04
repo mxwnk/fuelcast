@@ -159,6 +159,7 @@ const DICT = {
     "export.print": "Print",
     "export.copy": "Copy share link",
     "export.copied": "Link copied",
+    "export.copyFallback": "Copy this link:",
 
     "footer.assumptions":
       "Your settings: {gel} g per gel · {bottle} ml bottle · maltodextrin counts as glucose. FuelCast is a planning aid, not medical or nutritional advice — always test your fueling strategy in training.",
@@ -407,6 +408,7 @@ const DICT = {
     "export.print": "Drucken",
     "export.copy": "Link kopieren",
     "export.copied": "Link kopiert",
+    "export.copyFallback": "Link kopieren:",
 
     "footer.assumptions":
       "Deine Einstellungen: {gel} g pro Gel · {bottle} ml Flasche · Maltodextrin zählt als Glukose. FuelCast ist eine Planungshilfe, keine medizinische oder Ernährungsberatung — teste deine Strategie immer im Training.",
@@ -503,10 +505,11 @@ const DICT = {
 } as const;
 
 export type MessageKey = keyof (typeof DICT)["en"];
-export type TranslateFn = (
-  key: MessageKey,
-  params?: Record<string, string | number>,
-) => string;
+export type TranslateFn = {
+  (key: MessageKey, params?: Record<string, string | number>): string;
+  /** Dynamic key overload — accepts any string but warns in dev if missing */
+  (key: string, params?: Record<string, string | number>): string;
+};
 
 interface I18nValue {
   lang: Lang;
@@ -546,8 +549,13 @@ export function I18nProvider({ lang, onChangeLang, children }: I18nProviderProps
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const t: TranslateFn = (key, params) => {
-    let text: string = DICT[lang][key] ?? DICT.en[key] ?? key;
+  const t: TranslateFn = (key: string, params?: Record<string, string | number>) => {
+    const dict = DICT[lang] as Record<string, string>;
+    const fallback = DICT.en as Record<string, string>;
+    let text: string = dict[key] ?? fallback[key] ?? key;
+    if (import.meta.env.DEV && !(key in fallback)) {
+      console.warn(`[i18n] Missing translation key: "${key}"`);
+    }
     if (params) {
       for (const [name, value] of Object.entries(params)) {
         text = text.replaceAll(`{${name}}`, String(value));

@@ -40,9 +40,15 @@ export function ExportBar({ input, exportTarget }: ExportBarProps) {
   }
 
   const copyLink = async () => {
-    await navigator.clipboard.writeText(buildShareUrl(input))
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      await navigator.clipboard.writeText(buildShareUrl(input))
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Fallback for insecure contexts or denied permission
+      const url = buildShareUrl(input)
+      window.prompt(t('export.copyFallback'), url)
+    }
   }
 
   return (
