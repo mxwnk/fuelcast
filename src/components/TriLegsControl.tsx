@@ -38,7 +38,7 @@ export function TriLegsControl({ legs, onChange }: TriLegsControlProps) {
 
         return (
           <div key={key} className="rounded-xl border border-line bg-raised p-3.5">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2">
               <span className="head flex items-center gap-2 text-xs">
                 <span className="text-accent">{LEG_ICONS[key]}</span>
                 {legLabel}

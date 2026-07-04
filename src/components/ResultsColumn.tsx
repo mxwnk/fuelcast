@@ -14,7 +14,7 @@ export function ResultsColumn({ input, plan, advanced }: ResultsColumnProps) {
   const exportRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <div
         ref={exportRef}
         className="rise space-y-4 bg-bg"

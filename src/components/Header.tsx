@@ -17,7 +17,7 @@ export function Header({ dark, onToggleTheme }: HeaderProps) {
 
   return (
     <header className="rise sticky top-0 z-20 border-b border-line bg-bg/85 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-y-2 px-4 py-3">
         <Link to={`/${lang}`} className="flex items-center gap-2.5">
           <span className="grid size-8 place-items-center rounded-lg bg-ink text-accent dark:bg-raised">
             <Zap className="size-4.5 fill-accent" strokeWidth={1.5} />
@@ -32,7 +32,7 @@ export function Header({ dark, onToggleTheme }: HeaderProps) {
           </div>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2">
           {/* Page navigation */}
           <nav
             aria-label="Navigation"

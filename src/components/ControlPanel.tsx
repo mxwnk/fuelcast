@@ -37,7 +37,7 @@ export function ControlPanel({
   const isTri = input.sport === 'triathlon'
 
   return (
-    <div className="space-y-6" data-print="hide">
+    <div className="min-w-0 space-y-6" data-print="hide">
       <div className="rise" style={{ animationDelay: '80ms' }}>
         <Section step={1} title={t('section.sport')}>
           <SportSelector value={input.sport} onChange={(sport) => onPatch({ sport })} />
