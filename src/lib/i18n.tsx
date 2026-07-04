@@ -172,6 +172,16 @@ const DICT = {
     "imprint.copyright.p1": "The content and works created by the site operator on these pages are subject to German copyright law. Reproduction, editing, distribution, and any kind of use beyond the limits of copyright law require the written consent of the respective author or creator.",
     "imprint.copyright.p2": "Insofar as the content on this site was not created by the operator, the copyrights of third parties are respected. Should you nevertheless become aware of a copyright infringement, please inform us accordingly. Upon becoming aware of legal violations, we will remove such content immediately.",
 
+    "privacy.title": "Privacy Policy",
+    "privacy.updated": "Last updated: July 2026",
+    "privacy.p1": "FuelCast does not collect, store, transmit, or share any personal data or user information.",
+    "privacy.p2": "This app runs entirely in your browser. No data is sent to any server. There are no analytics, no cookies, no tracking technologies, and no third-party SDKs.",
+    "privacy.p3": "Your fueling plan exists only in the URL. If you share the URL, anyone with the link can see the plan parameters. No data is stored on our side.",
+    "privacy.p4": "The site uses a Service Worker for offline functionality. This caches only static assets (HTML, CSS, JS, fonts) on your device — no personal data.",
+    "privacy.p5": "If this policy changes in the future, the 'Last Updated' date will be revised and any new data practices will be clearly disclosed.",
+
+    "footer.privacy.link": "Privacy",
+
     "science.heroTitle": "The Science",
     "science.heroAccent": " Behind FuelCast",
     "science.heroDesc":
@@ -396,6 +406,16 @@ const DICT = {
     "imprint.copyright.title": "Urheberrecht",
     "imprint.copyright.p1": "Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.",
     "imprint.copyright.p2": "Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.",
+
+    "privacy.title": "Datenschutz",
+    "privacy.updated": "Stand: Juli 2026",
+    "privacy.p1": "FuelCast erhebt, speichert, überträgt oder teilt keinerlei personenbezogene Daten oder Nutzerinformationen.",
+    "privacy.p2": "Diese App läuft vollständig in deinem Browser. Es werden keine Daten an einen Server gesendet. Es gibt keine Analyse-Tools, keine Cookies, keine Tracking-Technologien und keine Drittanbieter-SDKs.",
+    "privacy.p3": "Dein Fueling-Plan existiert ausschließlich in der URL. Wenn du die URL teilst, kann jeder mit dem Link die Plan-Parameter sehen. Auf unserer Seite werden keine Daten gespeichert.",
+    "privacy.p4": "Die Seite verwendet einen Service Worker für Offline-Funktionalität. Dieser speichert ausschließlich statische Dateien (HTML, CSS, JS, Schriften) auf deinem Gerät — keine personenbezogenen Daten.",
+    "privacy.p5": "Sollte sich diese Richtlinie in Zukunft ändern, wird das Datum der letzten Aktualisierung angepasst und neue Datenverarbeitungen werden klar offengelegt.",
+
+    "footer.privacy.link": "Datenschutz",
 
     "science.heroTitle": "Die Wissenschaft",
     "science.heroAccent": " hinter FuelCast",

@@ -13,6 +13,7 @@ import { Header } from './components/Header'
 import { CalculatorPage } from './components/pages/CalculatorPage'
 import { ImprintPage } from './components/pages/ImprintPage'
 import { KnowHowPage } from './components/pages/KnowHowPage'
+import { PrivacyPage } from './components/pages/PrivacyPage'
 import { useAdvancedMode } from './hooks/useAdvancedMode'
 import { usePlanInput } from './hooks/usePlanInput'
 import { useTheme } from './hooks/useTheme'
@@ -82,6 +83,7 @@ export default function App() {
         <Route path="science" element={<Navigate to="../know-how" replace />} />
         <Route path="background" element={<Navigate to="../know-how" replace />} />
         <Route path="imprint" element={<ImprintPage />} />
+        <Route path="privacy" element={<PrivacyPage />} />
         <Route path="*" element={<Navigate to="." replace />} />
       </Route>
       <Route path="*" element={<RedirectToLang />} />

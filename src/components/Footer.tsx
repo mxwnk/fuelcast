@@ -50,6 +50,12 @@ export function Footer({ config }: FooterProps) {
           >
             {t('footer.imprint')}
           </Link>
+          <Link
+            to={`/${lang}/privacy`}
+            className="font-semibold text-muted underline-offset-2 hover:text-accent hover:underline"
+          >
+            {t('footer.privacy.link')}
+          </Link>
         </div>
         <p className="flex items-center gap-1.5">
           <span>© {new Date().getFullYear()} FuelCast · Made with</span>
