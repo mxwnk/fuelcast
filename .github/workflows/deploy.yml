@@ -10,9 +10,11 @@ permissions:
   pages: write
   id-token: write
 
+# Allow one deployment at a time, but let an in-flight Pages deployment
+# finish — cancelling it mid-flight leaves it broken ("try again later").
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:

@@ -3,6 +3,10 @@
     "collect": {
       "startServerCommand": "npx serve dist -l 9222 -s",
       "startServerReadyPattern": "Accepting connections",
+      "numberOfRuns": 1,
+      "settings": {
+        "chromeFlags": "--no-sandbox --headless=new --disable-gpu --disable-dev-shm-usage"
+      },
       "url": [
         "http://localhost:9222/en/"
       ]
