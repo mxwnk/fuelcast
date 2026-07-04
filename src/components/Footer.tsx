@@ -33,8 +33,8 @@ export function Footer({ config }: FooterProps) {
       <p className="mt-2">{t('footer.privacy')}</p>
       <p className="mt-2">{t('footer.disclaimer')}</p>
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-        <div className="flex flex-wrap items-center gap-3">
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-3 border-t border-line pt-4 sm:justify-between">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <a
             href={REPO_URL}
             target="_blank"
