@@ -5,7 +5,7 @@
       "startServerReadyPattern": "Accepting connections",
       "numberOfRuns": 1,
       "settings": {
-        "chromeFlags": "--no-sandbox --headless=new --disable-gpu --disable-dev-shm-usage"
+        "chromeFlags": "--no-sandbox --disable-dev-shm-usage"
       },
       "url": [
         "http://localhost:9222/en/"
