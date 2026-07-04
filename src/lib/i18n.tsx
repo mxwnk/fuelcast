@@ -150,7 +150,7 @@ const DICT = {
     "export.copied": "Link copied",
 
     "footer.assumptions":
-      "Assumptions: 1 gel ≈ {gel} g carbs · 1 bottle = {bottle} ml · maltodextrin counts as glucose. FuelCast is a planning aid, not medical or nutritional advice — always test your fueling strategy in training.",
+      "Your settings: {gel} g per gel · {bottle} ml bottle · maltodextrin counts as glucose. FuelCast is a planning aid, not medical or nutritional advice — always test your fueling strategy in training.",
     "footer.privacy":
       "Free, open and stateless: no account, no tracking, no data leaves your device — your plan lives entirely in the URL.",
     "footer.disclaimer":
@@ -385,7 +385,7 @@ const DICT = {
     "export.copied": "Link kopiert",
 
     "footer.assumptions":
-      "Annahmen: 1 Gel ≈ {gel} g Carbs · 1 Flasche = {bottle} ml · Maltodextrin zählt als Glukose. FuelCast ist eine Planungshilfe, keine medizinische oder Ernährungsberatung — teste deine Strategie immer im Training.",
+      "Deine Einstellungen: {gel} g pro Gel · {bottle} ml Flasche · Maltodextrin zählt als Glukose. FuelCast ist eine Planungshilfe, keine medizinische oder Ernährungsberatung — teste deine Strategie immer im Training.",
     "footer.privacy":
       "Kostenlos, offen und zustandslos: kein Konto, kein Tracking, keine Daten verlassen dein Gerät — dein Plan lebt komplett in der URL.",
     "footer.disclaimer":
