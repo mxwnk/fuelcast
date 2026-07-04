@@ -45,6 +45,12 @@ export function Footer() {
           >
             {t('footer.privacy.link')}
           </Link>
+          <a
+            href="mailto:hello@fuelcast.run?subject=FuelCast Feedback"
+            className="font-semibold text-muted underline-offset-2 hover:text-accent hover:underline"
+          >
+            {t('footer.feedback')}
+          </a>
         </div>
         <p className="flex items-center gap-1.5">
           <span>© {new Date().getFullYear()} FuelCast · Made with</span>

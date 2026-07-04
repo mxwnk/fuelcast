@@ -193,6 +193,7 @@ const DICT = {
     "privacy.p5": "If this policy changes in the future, the 'Last Updated' date will be revised and any new data practices will be clearly disclosed.",
 
     "footer.privacy.link": "Privacy",
+    "footer.feedback": "Feedback",
 
     "science.heroTitle": "The Science",
     "science.heroAccent": " Behind FuelCast",
@@ -442,6 +443,7 @@ const DICT = {
     "privacy.p5": "Sollte sich diese Richtlinie in Zukunft ändern, wird das Datum der letzten Aktualisierung angepasst und neue Datenverarbeitungen werden klar offengelegt.",
 
     "footer.privacy.link": "Datenschutz",
+    "footer.feedback": "Feedback",
 
     "science.heroTitle": "Die Wissenschaft",
     "science.heroAccent": " hinter FuelCast",
