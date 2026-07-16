@@ -1,4 +1,5 @@
 import { Plus, Trash2, Zap } from 'lucide-react'
+import { useRef } from 'react'
 import type {
   BuildItem,
   LegBuildProgress,
@@ -16,6 +17,7 @@ import {
   GEL_SIZES,
 } from '../lib/fueling'
 import { useI18n } from '../lib/i18n'
+import { ExportBar } from './ExportBar'
 import { makeFormatters } from './results/format'
 import { NumberField } from './Slider'
 import { Timeline } from './Timeline'
@@ -46,6 +48,7 @@ export function BuildPanel({
 }: BuildPanelProps) {
   const { locale } = useI18n()
   const { fmt } = makeFormatters(locale)
+  const exportRef = useRef<HTMLDivElement>(null)
   const progress = computeBuildProgress(plan, items)
   const timelinePlan = applyBuildItemsToPlan(plan, items)
 
@@ -69,29 +72,34 @@ export function BuildPanel({
     })
 
   return (
-    <div className="space-y-6">
-      <RaceOverview
-        input={input}
-        plan={plan}
-        items={items}
-        assigned={progress.assignedCarbs}
-        goal={progress.goalCarbs}
-        format={fmt}
-      />
-      {progress.legs.map((legProgress, index) => (
-        <BuildLegCard
-          key={legProgress.key}
-          step={index + 1}
-          legProgress={legProgress}
-          items={items.filter((item) => item.leg === legProgress.key)}
-          ratio={input.ratio}
-          onAddGel={() => addGel(legProgress.key)}
-          onAddBottle={() => addBottle(legProgress.key)}
-          onUpdateItem={onUpdateItem}
-          onRemoveItem={onRemoveItem}
+    <div className="space-y-4">
+      <div ref={exportRef} className="space-y-6 bg-bg">
+        <RaceOverview
+          input={input}
+          plan={plan}
+          items={items}
+          assigned={progress.assignedCarbs}
+          goal={progress.goalCarbs}
+          format={fmt}
         />
-      ))}
-      <Timeline plan={timelinePlan} />
+        {progress.legs.map((legProgress, index) => (
+          <BuildLegCard
+            key={legProgress.key}
+            step={index + 1}
+            legProgress={legProgress}
+            items={items.filter((item) => item.leg === legProgress.key)}
+            ratio={input.ratio}
+            onAddGel={() => addGel(legProgress.key)}
+            onAddBottle={() => addBottle(legProgress.key)}
+            onUpdateItem={onUpdateItem}
+            onRemoveItem={onRemoveItem}
+          />
+        ))}
+        <Timeline plan={timelinePlan} />
+      </div>
+      <div data-print="hide">
+        <ExportBar input={input} exportTarget={exportRef} />
+      </div>
     </div>
   )
 }
