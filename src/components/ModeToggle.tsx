@@ -1,3 +1,5 @@
+import { Hammer, Sparkles } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import type { CalculatorMode } from '../hooks/useBuildMode'
 import { useI18n } from '../lib/i18n'
 
@@ -6,7 +8,10 @@ interface ModeToggleProps {
   onChange: (mode: CalculatorMode) => void
 }
 
-const MODES: CalculatorMode[] = ['auto', 'build']
+const MODES: { value: CalculatorMode; icon: LucideIcon }[] = [
+  { value: 'auto', icon: Sparkles },
+  { value: 'build', icon: Hammer },
+]
 
 export function ModeToggle({ mode, onChange }: ModeToggleProps) {
   const { t } = useI18n()
@@ -14,24 +19,25 @@ export function ModeToggle({ mode, onChange }: ModeToggleProps) {
     <div
       role="radiogroup"
       aria-label={t('mode.label')}
-      className="inline-flex rounded-xl border border-line bg-raised p-1"
+      className="inline-flex rounded-lg border border-line bg-raised p-1"
     >
-      {MODES.map((option) => {
-        const isActive = option === mode
+      {MODES.map(({ value, icon: Icon }) => {
+        const isActive = value === mode
         return (
           <button
-            key={option}
+            key={value}
             type="button"
             role="radio"
             aria-checked={isActive}
-            onClick={() => onChange(option)}
-            className={`head rounded-lg px-4 py-1.5 text-sm transition-all duration-150 active:scale-95 ${
+            onClick={() => onChange(value)}
+            className={`head flex items-center gap-1.5 rounded-md px-4 py-1.5 text-sm transition-all duration-150 active:scale-95 ${
               isActive
-                ? 'bg-accent text-accent-ink shadow-[inset_0_0_0_1px_var(--accent)]'
+                ? 'bg-accent text-accent-ink'
                 : 'text-muted hover:text-ink'
             }`}
           >
-            {t(`mode.${option}`)}
+            <Icon className="size-4" />
+            {t(`mode.${value}`)}
           </button>
         )
       })}
