@@ -15,6 +15,7 @@ import { ImprintPage } from './components/pages/ImprintPage'
 import { KnowHowPage } from './components/pages/KnowHowPage'
 import { PrivacyPage } from './components/pages/PrivacyPage'
 import { useAdvancedMode } from './hooks/useAdvancedMode'
+import { useBuildMode } from './hooks/useBuildMode'
 import { usePlanInput } from './hooks/usePlanInput'
 import { useSeo } from './hooks/useSeo'
 import { useTheme } from './hooks/useTheme'
@@ -22,7 +23,8 @@ import type { Lang } from './lib/i18n'
 import { detectLang, I18nProvider, isLang, persistLang } from './lib/i18n'
 
 export type CalculatorContext = ReturnType<typeof usePlanInput> &
-  ReturnType<typeof useAdvancedMode>
+  ReturnType<typeof useAdvancedMode> &
+  ReturnType<typeof useBuildMode>
 
 /** Prefixes prefix-less URLs with the preferred language, e.g. /science → /de/science */
 function RedirectToLang() {
@@ -43,6 +45,7 @@ function LangLayout() {
   const { dark, toggle } = useTheme()
   const planState = usePlanInput()
   const advancedState = useAdvancedMode()
+  const buildState = useBuildMode()
 
   const validLang = isLang(lang)
 
@@ -61,7 +64,11 @@ function LangLayout() {
     navigate(`/${next}${rest}${location.search}`, { replace: true })
   }
 
-  const context: CalculatorContext = { ...planState, ...advancedState }
+  const context: CalculatorContext = {
+    ...planState,
+    ...advancedState,
+    ...buildState,
+  }
 
   return (
     <I18nProvider lang={lang} onChangeLang={changeLang}>

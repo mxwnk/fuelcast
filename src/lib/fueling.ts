@@ -14,6 +14,23 @@ export interface LegInput {
   carbsPerHour: number
 }
 
+/** A concrete fuelling item the athlete plans to carry in Build mode */
+export type BuildItemKind = 'gel' | 'bottle'
+
+export interface BuildItem {
+  /** Stable identifier for React keys and list updates */
+  id: string
+  kind: BuildItemKind
+  /** Carbohydrates per single item, in grams */
+  carbs: number
+  /** Bottle volume in ml — only meaningful for bottles */
+  ml?: number
+  /** How many of this item are carried */
+  count: number
+  /** Which leg this item is assigned to */
+  leg: LegKey | 'race'
+}
+
 /** Advanced assumptions — sensible defaults keep the simple mode simple */
 export interface PlanConfig {
   gelCarbs: number
@@ -32,6 +49,8 @@ export interface PlanInput {
   ratio: Ratio
   fuelSource: FuelSource
   config: PlanConfig
+  /** Items placed by the athlete in the interactive Build mode */
+  buildItems: BuildItem[]
 }
 
 export interface TimelineEvent {
@@ -198,6 +217,23 @@ export function formatClock(min: number): string {
   return `${h}:${String(m).padStart(2, '0')}`
 }
 
+/**
+ * Places gel markers within a representative hour by interval. Reproduces the
+ * centred layout (1 gel → :30, 2 → :15/:45, 3 → :10/:30/:50) and handles
+ * intervals that don't divide evenly into 60. Returns an empty list when no
+ * gels are taken.
+ */
+function placeGelEvents(gelIntervalMin: number | null): TimelineEvent[] {
+  if (!gelIntervalMin) return []
+  const events: TimelineEvent[] = []
+  for (let m = Math.round(gelIntervalMin / 2); m < 60; m += gelIntervalMin) {
+    events.push({ minute: m, kind: 'gel' })
+  }
+  // Interval longer than an hour: still show one gel so the rail isn't empty
+  if (events.length === 0) events.push({ minute: 30, kind: 'gel' })
+  return events
+}
+
 function computeLeg(
   key: LegKey | 'race',
   durationMin: number,
@@ -257,18 +293,7 @@ function computeLeg(
   for (let m = sipIntervalMin; m <= 60; m += sipIntervalMin) {
     hourlyEvents.push({ minute: m, kind: 'sip' })
   }
-  // Place gels by interval within a representative hour. This reproduces the
-  // old centred layout for combo (1 gel → :30, 2 → :15/:45, 3 → :10/:30/:50)
-  // and handles gels-only intervals that don't divide evenly into 60.
-  if (gelIntervalMin) {
-    for (let m = Math.round(gelIntervalMin / 2); m < 60; m += gelIntervalMin) {
-      hourlyEvents.push({ minute: m, kind: 'gel' })
-    }
-    // Interval longer than an hour: still show one gel so the rail isn't empty
-    if (!hourlyEvents.some((e) => e.kind === 'gel')) {
-      hourlyEvents.push({ minute: 30, kind: 'gel' })
-    }
-  }
+  hourlyEvents.push(...placeGelEvents(gelIntervalMin))
   hourlyEvents.sort((a, b) => a.minute - b.minute)
 
   return {
@@ -395,5 +420,121 @@ export function computePlan(input: PlanInput): RacePlan {
     totalSaltG: sum((l) => (l.sodiumMgPerHour * SODIUM_TO_SALT_FACTOR * l.hours) / 1000),
     warnings,
     hints,
+  }
+}
+
+/** Carbs contributed by a single build item (per-item carbs × count) */
+export function buildItemCarbs(item: BuildItem): number {
+  return item.carbs * item.count
+}
+
+/** Progress of assigned build items against the carb goal for one leg */
+export interface LegBuildProgress {
+  key: LegKey | 'race'
+  durationMin: number
+  goalCarbs: number
+  assignedCarbs: number
+  /** Positive when carbs are still missing, negative when over the goal */
+  remainingCarbs: number
+  /** Fraction of the goal covered, clamped to [0, 1] for progress bars */
+  percent: number
+}
+
+export interface BuildProgress {
+  legs: LegBuildProgress[]
+  goalCarbs: number
+  assignedCarbs: number
+  remainingCarbs: number
+}
+
+function sumAssignedCarbs(items: BuildItem[], legKey: LegKey | 'race'): number {
+  return items
+    .filter((item) => item.leg === legKey)
+    .reduce((total, item) => total + buildItemCarbs(item), 0)
+}
+
+function toLegProgress(leg: LegPlan, items: BuildItem[]): LegBuildProgress {
+  const goalCarbs = leg.totalCarbs
+  const assignedCarbs = sumAssignedCarbs(items, leg.key)
+  const percent = goalCarbs > 0 ? Math.min(1, assignedCarbs / goalCarbs) : 0
+  return {
+    key: leg.key,
+    durationMin: leg.durationMin,
+    goalCarbs,
+    assignedCarbs,
+    remainingCarbs: goalCarbs - assignedCarbs,
+    percent,
+  }
+}
+
+/**
+ * Overlays the interactive build items onto the computed carb goals. The plan
+ * defines the target per leg (Auto mode); this reports how much of each target
+ * the assigned items cover, without touching the underlying calculation.
+ */
+export function computeBuildProgress(
+  plan: RacePlan,
+  items: BuildItem[],
+): BuildProgress {
+  const legs = plan.legs.map((leg) => toLegProgress(leg, items))
+  const goalCarbs = legs.reduce((total, leg) => total + leg.goalCarbs, 0)
+  const assignedCarbs = legs.reduce((total, leg) => total + leg.assignedCarbs, 0)
+  return {
+    legs,
+    goalCarbs,
+    assignedCarbs,
+    remainingCarbs: goalCarbs - assignedCarbs,
+  }
+}
+
+/** Recomputes a leg's gel cadence from the gels actually placed in Build mode */
+function applyBuildGelsToLeg(leg: LegPlan, items: BuildItem[]): LegPlan {
+  const gelItems = items.filter(
+    (item) => item.leg === leg.key && item.kind === 'gel',
+  )
+  const totalGels = gelItems.reduce((count, item) => count + item.count, 0)
+  const sips = leg.hourlyEvents.filter((event) => event.kind !== 'gel')
+
+  if (totalGels === 0) {
+    return {
+      ...leg,
+      totalGels: 0,
+      gelsPerHour: 0,
+      gelIntervalMin: null,
+      hourlyEvents: sips,
+    }
+  }
+
+  const totalGelCarbs = gelItems.reduce(
+    (carbs, item) => carbs + buildItemCarbs(item),
+    0,
+  )
+  const gelIntervalMin = Math.max(5, Math.round(leg.durationMin / totalGels))
+  const hourlyEvents = [...sips, ...placeGelEvents(gelIntervalMin)].sort(
+    (a, b) => a.minute - b.minute,
+  )
+
+  return {
+    ...leg,
+    totalGels,
+    gelCarbs: Math.round(totalGelCarbs / totalGels),
+    gelsPerHour: leg.hours > 0 ? totalGels / leg.hours : 0,
+    gelIntervalMin,
+    hourlyEvents,
+  }
+}
+
+/**
+ * Produces a plan whose per-leg gel cadence reflects the gels placed in Build
+ * mode instead of the gear assumptions, so the timeline matches the build.
+ * Sip/fluid cadence is left untouched.
+ */
+export function applyBuildItemsToPlan(
+  plan: RacePlan,
+  items: BuildItem[],
+): RacePlan {
+  return {
+    ...plan,
+    legs: plan.legs.map((leg) => applyBuildGelsToLeg(leg, items)),
   }
 }

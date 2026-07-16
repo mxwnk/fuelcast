@@ -5,6 +5,7 @@ import type {
   PlanInput,
   RacePreset,
 } from '../lib/fueling'
+import type { CalculatorMode } from '../hooks/useBuildMode'
 import { useI18n } from '../lib/i18n'
 import { AdvancedOptions } from './AdvancedOptions'
 import { CarbControl } from './CarbControl'
@@ -16,6 +17,7 @@ import { TriLegsControl } from './TriLegsControl'
 
 interface ControlPanelProps {
   input: PlanInput
+  mode: CalculatorMode
   advanced: boolean
   onToggleAdvanced: () => void
   onPatch: (partial: Partial<PlanInput>) => void
@@ -26,6 +28,7 @@ interface ControlPanelProps {
 
 export function ControlPanel({
   input,
+  mode,
   advanced,
   onToggleAdvanced,
   onPatch,
@@ -75,6 +78,7 @@ export function ControlPanel({
 
       <AdvancedOptions
         input={input}
+        mode={mode}
         advanced={advanced}
         onToggle={onToggleAdvanced}
         onPatch={onPatch}

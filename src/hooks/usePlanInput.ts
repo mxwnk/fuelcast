@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import type {
+  BuildItem,
   LegInput,
   LegKey,
   PlanConfig,
@@ -17,6 +18,7 @@ const DEFAULT_INPUT: PlanInput = {
   ratio: { glucose: 1, fructose: 0.8 },
   fuelSource: 'combo',
   config: DEFAULT_CONFIG,
+  buildItems: [],
 }
 
 /** Plan input state, hydrated from the share URL, plus patch helpers */
@@ -58,5 +60,32 @@ export function usePlanInput() {
       return { ...prev, durationMin: preset.durationMin ?? prev.durationMin }
     })
 
-  return { input, plan, patch, patchLeg, patchConfig, applyPreset }
+  const addBuildItem = (item: BuildItem) =>
+    setInput((prev) => ({ ...prev, buildItems: [...prev.buildItems, item] }))
+
+  const updateBuildItem = (id: string, itemPatch: Partial<BuildItem>) =>
+    setInput((prev) => ({
+      ...prev,
+      buildItems: prev.buildItems.map((item) =>
+        item.id === id ? { ...item, ...itemPatch } : item,
+      ),
+    }))
+
+  const removeBuildItem = (id: string) =>
+    setInput((prev) => ({
+      ...prev,
+      buildItems: prev.buildItems.filter((item) => item.id !== id),
+    }))
+
+  return {
+    input,
+    plan,
+    patch,
+    patchLeg,
+    patchConfig,
+    applyPreset,
+    addBuildItem,
+    updateBuildItem,
+    removeBuildItem,
+  }
 }

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { PlanInput } from './fueling'
 import { DEFAULT_CONFIG, DEFAULT_TRI_LEGS } from './fueling'
-import { buildShareUrl, hasAdvancedParams, parseShareUrl } from './share'
+import { buildShareUrl, hasAdvancedParams, hasBuildParams, parseShareUrl } from './share'
 
 const baseInput = (overrides: Partial<PlanInput> = {}): PlanInput => ({
   sport: 'cycling',
@@ -11,6 +11,7 @@ const baseInput = (overrides: Partial<PlanInput> = {}): PlanInput => ({
   ratio: { glucose: 1, fructose: 0.8 },
   fuelSource: 'combo',
   config: { ...DEFAULT_CONFIG },
+  buildItems: [],
   ...overrides,
 })
 
@@ -119,6 +120,48 @@ describe('parseShareUrl', () => {
   it('parses the fuel source param', () => {
     expect(parseShareUrl('?s=cycling&fs=gels')?.fuelSource).toBe('gels')
     expect(parseShareUrl('?s=cycling&fs=bogus')?.fuelSource).toBeUndefined()
+  })
+})
+
+describe('build items', () => {
+  it('round-trips gels and bottles per leg', () => {
+    const input = baseInput({
+      sport: 'triathlon',
+      buildItems: [
+        { id: 'a', kind: 'gel', carbs: 25, count: 6, leg: 'bike' },
+        { id: 'b', kind: 'bottle', carbs: 60, ml: 750, count: 2, leg: 'bike' },
+        { id: 'c', kind: 'gel', carbs: 30, count: 3, leg: 'run' },
+      ],
+    })
+    const parsed = parseShareUrl(search(buildShareUrl(input)))
+    const items = parsed?.buildItems
+    expect(items).toHaveLength(3)
+    expect(items?.[0]).toMatchObject({ kind: 'gel', carbs: 25, count: 6, leg: 'bike' })
+    expect(items?.[1]).toMatchObject({
+      kind: 'bottle',
+      carbs: 60,
+      ml: 750,
+      count: 2,
+      leg: 'bike',
+    })
+    expect(items?.[2]).toMatchObject({ kind: 'gel', carbs: 30, count: 3, leg: 'run' })
+  })
+
+  it('omits the build param when no items are present', () => {
+    const url = buildShareUrl(baseInput())
+    expect(url).not.toContain('b=')
+  })
+
+  it('ignores malformed item tokens', () => {
+    const parsed = parseShareUrl('?s=cycling&b=g25x6.race-garbage-b60m750x2.run')
+    expect(parsed?.buildItems).toHaveLength(2)
+  })
+})
+
+describe('hasBuildParams', () => {
+  it('is true only when a build param is present', () => {
+    expect(hasBuildParams('?s=cycling&b=g25x6.race')).toBe(true)
+    expect(hasBuildParams('?s=cycling&d=180&c=90')).toBe(false)
   })
 })
 
