@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 interface SliderProps {
   min: number
   max: number
@@ -43,6 +45,30 @@ export function NumberField({
   unit,
   ariaLabel,
 }: NumberFieldProps) {
+  // Local draft so the field can be emptied while typing. A controlled numeric
+  // value would coerce an empty input back to a number and block clearing it.
+  const [draft, setDraft] = useState(String(value))
+
+  // Keep the draft in sync when the value changes from outside (e.g. slider).
+  useEffect(() => {
+    setDraft(String(value))
+  }, [value])
+
+  const clamp = (candidate: number) => Math.min(max, Math.max(min, candidate))
+
+  const commit = (raw: string) => {
+    const parsed = Number(raw)
+    if (raw.trim() === '' || !Number.isFinite(parsed)) {
+      const fallback = clamp(0)
+      onChange(fallback)
+      setDraft(String(fallback))
+      return
+    }
+    const next = clamp(parsed)
+    onChange(next)
+    setDraft(String(next))
+  }
+
   return (
     <label className="flex items-baseline gap-1.5 rounded-lg border border-line bg-raised px-3 py-1.5 focus-within:border-accent transition-colors">
       <input
@@ -51,12 +77,20 @@ export function NumberField({
         min={min}
         max={max}
         step={step}
-        value={value}
+        value={draft}
         aria-label={ariaLabel}
         onChange={(e) => {
-          const v = Number(e.target.value)
-          if (Number.isFinite(v)) onChange(Math.min(max, Math.max(min, v)))
+          const raw = e.target.value
+          setDraft(raw)
+          const parsed = Number(raw)
+          // Live-commit only genuine, in-range values so typing stays smooth
+          // while still allowing an empty or out-of-range intermediate state.
+          if (raw.trim() !== '' && Number.isFinite(parsed)) {
+            const clamped = clamp(parsed)
+            if (clamped === parsed) onChange(clamped)
+          }
         }}
+        onBlur={(e) => commit(e.target.value)}
       />
       <span className="data text-xs text-muted">{unit}</span>
     </label>
