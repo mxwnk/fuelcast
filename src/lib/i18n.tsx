@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect } from "react";
 
 export type Lang = "en" | "de";
 
-const DICT = {
+export const DICT = {
   en: {
     "app.tagline": "Endurance fueling calc",
     "nav.calculator": "Calculator",
