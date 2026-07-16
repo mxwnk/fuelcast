@@ -14,7 +14,7 @@ FuelCast is a client-side endurance sports fueling calculator for triathlon, cyc
 - **Linter:** OxLint (not ESLint)
 - **Tests:** Vitest
 - **PWA:** vite-plugin-pwa (Workbox, auto-update)
-- **Deployment:** GitHub Pages at `/fuelcast/`
+- **Deployment:** GitHub Pages at `fuelcast.run` (root path, custom domain via `public/CNAME`)
 
 No router, no state management library, no CSS-in-JS, no component library.
 

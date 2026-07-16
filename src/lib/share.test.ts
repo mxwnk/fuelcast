@@ -18,7 +18,7 @@ const baseInput = (overrides: Partial<PlanInput> = {}): PlanInput => ({
 beforeEach(() => {
   vi.stubGlobal('location', {
     origin: 'https://example.test',
-    pathname: '/fuelcast/',
+    pathname: '/',
   })
 })
 
@@ -28,7 +28,7 @@ describe('buildShareUrl', () => {
   it('encodes single-sport plans compactly', () => {
     const url = buildShareUrl(baseInput())
     expect(url).toBe(
-      'https://example.test/fuelcast/?s=cycling&d=240&c=90&r=1%3A0.8',
+      'https://example.test/?s=cycling&d=240&c=90&r=1%3A0.8',
     )
   })
 
