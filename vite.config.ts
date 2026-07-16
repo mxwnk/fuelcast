@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { configDefaults, defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -6,6 +6,10 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vite.dev/config/
 export default defineConfig({
   // Custom domain: fuelcast.run (root path)
+  test: {
+    // Background-agent worktrees live under .claude/ and duplicate the suite
+    exclude: [...configDefaults.exclude, '**/.claude/**'],
+  },
   plugins: [
     react(),
     tailwindcss(),
